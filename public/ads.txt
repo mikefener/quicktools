@@ -1,5 +1,1 @@
-# QuickTools Ad Network Authorization
-contact=mikefener@gmail.com
-
-# Replace with your actual publisher ID once you have your AdSense account:
-google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0
+google.com, pub-3143883219144777, DIRECT, f08c47fec0942fa0
