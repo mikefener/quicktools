@@ -73,7 +73,7 @@ export default function RootLayout({
       'Fast, client-side tools for PDF editing, image conversion, and text processing. Files never leave your device.',
   }
 
-  const adsenseId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID
+  const adsenseId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || 'ca-pub-3143883219144777'
 
   return (
     <html lang="en">
@@ -84,14 +84,12 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         {/* Google AdSense Script */}
-        {adsenseId && (
-          <Script
-            id="adsbygoogle-init"
-            strategy="afterInteractive"
-            crossOrigin="anonymous"
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseId}`}
-          />
-        )}
+        <Script
+          id="adsbygoogle-init"
+          strategy="afterInteractive"
+          crossOrigin="anonymous"
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseId}`}
+        />
       </head>
       <body className={`${inter.className} bg-zinc-950 text-white min-h-screen flex flex-col justify-between`}>
         {/* Navigation Bar */}
