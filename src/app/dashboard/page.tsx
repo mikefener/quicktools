@@ -1,0 +1,28 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { BarChart3 } from "lucide-react";
+import { getDashboardData } from "@/app/create/actions";
+import { Campaign } from "@/lib/data";
+import { getUserState, USER_STATE_EVENT, UserState } from "@/lib/storage";
+
+type RemoteTest = { id: string; title: string; option_a_url: string; option_b_url: string; target_votes: number; votes_a: number; votes_b: number; status: Campaign["status"] | "draft" | "pending_payment" };
+
+function TestCard({ test }: { test: RemoteTest }) {
+  const total = test.votes_a + test.votes_b;
+  const percentA = total ? Math.round((test.votes_a / total) * 100) : 50;
+  const winner = test.votes_a >= test.votes_b ? "A" : "B";
+  return <article className="border border-zinc-800 bg-zinc-900"><div className="border-b border-zinc-800 p-5"><div className="mb-2 flex gap-2 text-xs font-bold uppercase tracking-[0.14em] text-zinc-500"><span className={test.status === "active" ? "text-emerald-400" : "text-zinc-500"}>● {test.status.replace("_", " ")}</span><span>·</span><span>{total} / {test.target_votes} votes</span></div><h2 className="font-bold text-white">{test.title}</h2></div><div className="grid grid-cols-2 gap-3 p-5">{(["A", "B"] as const).map((option) => <div key={option} className="relative"><div className="aspect-video overflow-hidden bg-zinc-800"><img src={option === "A" ? test.option_a_url : test.option_b_url} alt={`Option ${option} for ${test.title}`} className="h-full w-full object-cover" /></div>{total > 0 && winner === option && <span className="absolute left-2 top-2 bg-emerald-400 px-2 py-1 text-[10px] font-black uppercase text-zinc-950">High Performer</span>}<div className="mt-2 flex justify-between text-xs"><span className="font-bold text-zinc-400">Option {option}</span><span className="font-bold text-white">{option === "A" ? test.votes_a : test.votes_b}</span></div></div>)}</div><div className="px-5 pb-5"><div className="mb-2 flex justify-between text-xs font-bold text-zinc-400"><span>Option A {percentA}%</span><span>Option B {100 - percentA}%</span></div><div className="flex h-2 overflow-hidden bg-zinc-800"><div className="bg-yellow-400" style={{ width: `${percentA}%` }} /><div className="bg-zinc-600" style={{ width: `${100 - percentA}%` }} /></div></div></article>;
+}
+
+export default function DashboardPage() {
+  const [tests, setTests] = useState<RemoteTest[]>([]);
+  const [userState, setUserState] = useState<UserState>({ userCredits: 0, votedTestIds: [], userTests: [], totalVotesCast: 0 });
+  const [tab, setTab] = useState<"mine" | "community">("mine");
+  const [error, setError] = useState("");
+  useEffect(() => { const sync = async () => { const localState = getUserState(); setUserState(localState); try { const data = await getDashboardData(); setUserState({ ...localState, userCredits: data.profile.credits, totalVotesCast: data.profile.lifetime_votes }); setTests(data.tests as RemoteTest[]); } catch (syncError) { setError(syncError instanceof Error ? syncError.message : "Unable to load dashboard data."); } }; const listener = () => void sync(); const timer = window.setTimeout(() => void sync(), 0); window.addEventListener(USER_STATE_EVENT, listener); return () => { window.clearTimeout(timer); window.removeEventListener(USER_STATE_EVENT, listener); }; }, []);
+  const mine = tests.filter((test) => userState.userTests.some((owned) => owned.id === test.id));
+  const community = tests.filter((test) => test.status === "completed" && !mine.some((owned) => owned.id === test.id));
+  const shown = tab === "mine" ? mine : community;
+  return <div className="mx-auto max-w-7xl px-5 py-10 lg:px-8"><div className="mb-8"><p className="text-xs font-bold uppercase tracking-[0.2em] text-yellow-400">Your signal room</p><h1 className="mt-3 text-4xl font-black tracking-tight text-white">Results dashboard</h1><p className="mt-3 text-zinc-400">Track your tests, credits, and impact in the community.</p></div><div className="grid border-y border-zinc-800 sm:grid-cols-3">{[["Available Credits", userState.userCredits, "text-yellow-400"], ["Lifetime Votes Cast", userState.totalVotesCast, "text-white"], ["Active Tests Running", tests.filter((test) => test.status === "active").length, "text-emerald-400"]].map(([label, value, color]) => <div key={label as string} className="border-b border-zinc-800 p-5 last:border-0 sm:border-b-0 sm:border-r sm:last:border-0"><span className="text-xs font-bold uppercase tracking-[0.14em] text-zinc-500">{label as string}</span><strong className={`mt-2 block text-3xl font-black ${color as string}`}>{value as number}</strong></div>)}</div><div className="mt-10 flex border-b border-zinc-800"><button onClick={() => setTab("mine")} className={`border-b-2 px-4 py-3 text-sm font-bold ${tab === "mine" ? "border-yellow-400 text-white" : "border-transparent text-zinc-500"}`}>My Tests <span className="ml-1 text-xs text-zinc-600">{mine.length}</span></button><button onClick={() => setTab("community")} className={`border-b-2 px-4 py-3 text-sm font-bold ${tab === "community" ? "border-yellow-400 text-white" : "border-transparent text-zinc-500"}`}>Community Tests <span className="ml-1 text-xs text-zinc-600">{community.length}</span></button></div>{error && <p className="mt-5 text-sm text-red-300">{error}</p>}{shown.length ? <div className="mt-6 grid gap-5 lg:grid-cols-2">{shown.map((test) => <TestCard key={test.id} test={test} />)}</div> : <div className="mt-6 border border-dashed border-zinc-800 p-12 text-center"><BarChart3 className="mx-auto text-zinc-700" /><p className="mt-4 text-sm text-zinc-500">{tab === "mine" ? "Your submitted tests will appear here." : "Completed community tests will appear here."}</p></div>}</div>;
+}

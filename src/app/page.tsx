@@ -1,69 +1,143 @@
-import Image from "next/image";
+import Link from 'next/link'
+
+const tools = [
+  {
+    title: 'Image Converter',
+    description: 'Convert and compress between PNG, JPG, WebP, and AVIF formats client-side.',
+    href: '/tools/image-converter',
+    tag: 'Image',
+    badge: 'Popular',
+    icon: (
+      <svg className="w-5 h-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Image Resizer',
+    description: 'Scale pixel dimensions and compress image sizes with aspect-ratio locking.',
+    href: '/tools/image-resizer',
+    tag: 'Image',
+    badge: 'Scale',
+    icon: (
+      <svg className="w-5 h-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+      </svg>
+    ),
+  },
+  {
+    title: 'SVG to PNG Exporter',
+    description: 'Render vector SVGs into high-resolution transparent PNG images up to 8x.',
+    href: '/tools/svg-to-png',
+    tag: 'Vector',
+    badge: 'Export',
+    icon: (
+      <svg className="w-5 h-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+      </svg>
+    ),
+  },
+  {
+    title: 'PDF Merger',
+    description: 'Combine multiple PDF documents into a single file securely in your browser.',
+    href: '/tools/pdf-merger',
+    tag: 'PDF',
+    badge: 'Fast',
+    icon: (
+      <svg className="w-5 h-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+      </svg>
+    ),
+  },
+  {
+    title: 'PDF Splitter & Extractor',
+    description: 'Extract specific pages or page ranges from any PDF with zero server uploads.',
+    href: '/tools/pdf-splitter',
+    tag: 'PDF',
+    badge: 'Extract',
+    icon: (
+      <svg className="w-5 h-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" />
+      </svg>
+    ),
+  },
+  {
+    title: 'QR Code Generator',
+    description: 'Create customizable vector and raster QR codes instantly for links or plain text.',
+    href: '/tools/qr-code-generator',
+    tag: 'Utility',
+    badge: 'Instant',
+    icon: (
+      <svg className="w-5 h-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+      </svg>
+    ),
+  },
+]
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="min-h-[calc(100vh-3.5rem)] bg-zinc-950 text-white flex flex-col justify-between">
+      {/* Hero Section */}
+      <section className="max-w-5xl mx-auto px-6 pt-10 pb-4 w-full text-center sm:text-left">
+        <div className="inline-block text-[11px] font-mono font-medium text-yellow-400/90 bg-yellow-400/10 border border-yellow-400/20 px-2.5 py-0.5 rounded-full mb-3">
+          100% Client-Side Processing
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight">
+          Free Browser Utilities. <br />
+          <span className="text-yellow-400">Files Never Leave Your Device.</span>
+        </h1>
+        <p className="text-zinc-400 mt-3 max-w-xl text-sm leading-relaxed">
+          High-performance media conversion and PDF tools running entirely on your local hardware. Instant execution with no file size limits or server queues.
+        </p>
+
+        {/* Display Frame */}
+        <div className="w-full my-8">
+          <div className="w-full h-24 sm:h-28 rounded-xl border border-dashed border-zinc-800 bg-zinc-900/40 flex flex-col items-center justify-center text-zinc-500 text-xs">
+            <span className="text-[10px] uppercase tracking-widest text-zinc-600 mb-1 font-mono">
+              Display Placement Area
+            </span>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-yellow-400/70"></span>
+              <span>Responsive Header Space (728x90 / Auto)</span>
+            </div>
+          </div>
         </div>
-      </main>
-    </div>
-  );
+      </section>
+
+      {/* Tools Grid (Balanced 3x2) */}
+      <section className="max-w-5xl mx-auto px-6 pb-12 w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {tools.map((tool) => (
+            <Link
+              key={tool.href}
+              href={tool.href}
+              className="group p-5 rounded-2xl bg-zinc-900/40 border border-zinc-800 hover:border-yellow-500/50 hover:bg-zinc-900 transition-all flex flex-col justify-between space-y-3"
+            >
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="p-2 rounded-lg bg-zinc-800/80 border border-zinc-700/50 group-hover:border-yellow-500/30">
+                    {tool.icon}
+                  </div>
+                  <span className="text-[11px] font-medium text-yellow-400 font-mono">
+                    {tool.badge}
+                  </span>
+                </div>
+                <h2 className="text-lg font-semibold text-white group-hover:text-yellow-400 transition-colors">
+                  {tool.title}
+                </h2>
+                <p className="text-xs text-zinc-400 leading-relaxed">
+                  {tool.description}
+                </p>
+              </div>
+
+              <div className="text-xs font-semibold text-yellow-400 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                Launch tool &rarr;
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+    </main>
+  )
 }

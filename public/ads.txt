@@ -1,0 +1,6 @@
+# QuickTools Ad Network Authorization
+# Replace with your publisher credentials when your ad account is approved:
+# Example: google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+
+# Disallow scraping/spoofing of ad inventory
+contact=admin@quicktools.dev
