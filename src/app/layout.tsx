@@ -58,7 +58,6 @@ export default function RootLayout({
     name: 'QuickTools Web',
     url: 'https://quicktoolsweb.com',
     applicationCategory: 'UtilitiesApplication',
-    operatingSystem: 'All',
     browserRequirements: 'Requires JavaScript. Requires HTML5.',
     offers: {
       '@type': 'Offer',
@@ -90,6 +89,22 @@ export default function RootLayout({
           crossOrigin="anonymous"
           src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseId}`}
         />
+        {/* Google Analytics 4 (GA4) */}
+        <Script
+          strategy="afterInteractive"
+          src="https://www.googletagmanager.com/gtag/js?id=G-F5MQ55NZ51"
+        />
+        <Script
+          id="google-analytics"
+          strategy="afterInteractive"
+        >
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-F5MQ55NZ51');
+          `}
+        </Script>
       </head>
       <body className={`${inter.className} bg-zinc-950 text-white min-h-screen flex flex-col justify-between`}>
         {/* Navigation Bar */}
