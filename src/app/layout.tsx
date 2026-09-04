@@ -147,16 +147,22 @@ export default function RootLayout({
         <div className="flex-1">{children}</div>
 
         {/* Global Legal & Copyright Footer */}
-        <footer className="border-t border-zinc-850 bg-zinc-950 py-8 mt-16">
+        <footer className="border-t border-zinc-800 bg-zinc-950 py-8 mt-16">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
             <div className="flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-yellow-400"></span>
               <span className="font-semibold text-zinc-300">QuickTools</span>
               <span>— 100% Client-Side Privacy. Zero server uploads.</span>
             </div>
-            <div className="flex items-center gap-4 text-zinc-400">
+            <div className="flex items-center gap-4 text-zinc-400 flex-wrap justify-center">
               <Link href="/privacy" className="hover:text-yellow-400 transition-colors">
                 Privacy Policy
+              </Link>
+              <Link href="/terms" className="hover:text-yellow-400 transition-colors">
+                Terms of Service
+              </Link>
+              <Link href="/contact" className="hover:text-yellow-400 transition-colors">
+                Contact Us
               </Link>
               <span>&copy; {new Date().getFullYear()} Michail Feneridis. All rights reserved.</span>
             </div>
