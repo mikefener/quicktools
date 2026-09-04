@@ -26,9 +26,22 @@ const POPULAR_CITIES: CityZone[] = [
   { id: 'tor', name: 'Toronto', country: 'Canada', zone: 'America/Toronto' },
 ]
 
+// Mathematically aligned tick marks for 24-hour range (0 to 23)
+const SLIDER_TICKS = [
+  { hr: 0, label: '12 AM' },
+  { hr: 3, label: '3 AM' },
+  { hr: 6, label: '6 AM' },
+  { hr: 9, label: '9 AM' },
+  { hr: 12, label: '12 PM' },
+  { hr: 15, label: '3 PM' },
+  { hr: 18, label: '6 PM' },
+  { hr: 21, label: '9 PM' },
+  { hr: 23, label: '11 PM' },
+]
+
 export default function TimezonePlanner() {
   const [selectedCityIds, setSelectedCityIds] = useState<string[]>(['nyc', 'lon', 'ber'])
-  const [selectedHour, setSelectedHour] = useState<number>(14) // 2:00 PM local reference default
+  const [selectedHour, setSelectedHour] = useState<number>(() => new Date().getHours())
   const [copied, setCopied] = useState<boolean>(false)
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [userTz, setUserTz] = useState<string>('UTC')
@@ -42,7 +55,6 @@ export default function TimezonePlanner() {
       setUserTz('UTC')
     }
 
-    // Restore from localStorage if available
     const saved = localStorage.getItem('quicktools_tz_cities')
     if (saved) {
       try {
@@ -56,13 +68,12 @@ export default function TimezonePlanner() {
     }
   }, [])
 
-  // Persist city list to localStorage
   const updateCities = (newCityIds: string[]) => {
     setSelectedCityIds(newCityIds)
     try {
       localStorage.setItem('quicktools_tz_cities', JSON.stringify(newCityIds))
     } catch {
-      // Ignore write errors
+      // Ignore storage errors
     }
   }
 
@@ -83,7 +94,6 @@ export default function TimezonePlanner() {
       .filter((c): c is CityZone => Boolean(c))
   }, [selectedCityIds])
 
-  // Get current day reference in UTC milliseconds for the selected hour
   const getReferenceDateForHour = (hour: number) => {
     const d = new Date()
     d.setMinutes(0)
@@ -93,7 +103,6 @@ export default function TimezonePlanner() {
     return d
   }
 
-  // Format time for a specific timezone
   const formatTimeForZone = (date: Date, timeZone: string) => {
     try {
       return new Intl.DateTimeFormat('en-US', {
@@ -107,7 +116,6 @@ export default function TimezonePlanner() {
     }
   }
 
-  // Get raw hour (0-23) in a specific timezone
   const getHourInZone = (date: Date, timeZone: string) => {
     try {
       const parts = new Intl.DateTimeFormat('en-US', {
@@ -122,7 +130,6 @@ export default function TimezonePlanner() {
     }
   }
 
-  // Copy meeting invite snippet to clipboard
   const handleCopySnippet = () => {
     const refDate = getReferenceDateForHour(selectedHour)
     const lines = activeCities.map((c) => {
@@ -134,6 +141,19 @@ export default function TimezonePlanner() {
     navigator.clipboard.writeText(textToCopy)
     setCopied(true)
     setTimeout(() => setCopied(false), 2500)
+  }
+
+  const stepHour = (delta: number) => {
+    setSelectedHour((prev) => {
+      const next = prev + delta
+      if (next < 0) return 23
+      if (next > 23) return 0
+      return next
+    })
+  }
+
+  const resetToNow = () => {
+    setSelectedHour(new Date().getHours())
   }
 
   const filteredSearch = POPULAR_CITIES.filter(
@@ -174,21 +194,49 @@ export default function TimezonePlanner() {
           </button>
         </div>
 
-        {/* Interactive Master Time Scrubber */}
-        <div className="bg-zinc-900/90 border border-zinc-800 rounded-xl p-5 sm:p-6 space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        {/* Master Time Scrubber */}
+        <div className="bg-zinc-900/90 border border-zinc-800 rounded-xl p-5 sm:p-6 space-y-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider block">
-                Selected Hour Cursor (Your Device Time: {userTz.replace('_', ' ')})
+                Selected Cursor (Your Device Time: {userTz.replace('_', ' ')})
               </span>
-              <span className="text-xl font-bold text-yellow-400">
-                {formatTimeForZone(getReferenceDateForHour(selectedHour), userTz)}
-              </span>
+              <div className="flex items-center gap-3 mt-0.5">
+                <span className="text-2xl font-bold text-yellow-400">
+                  {formatTimeForZone(getReferenceDateForHour(selectedHour), userTz)}
+                </span>
+                <div className="flex items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() => stepHour(-1)}
+                    className="px-2 py-1 text-xs font-mono bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded cursor-pointer"
+                    title="Subtract 1 hour"
+                  >
+                    -1h
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => stepHour(1)}
+                    className="px-2 py-1 text-xs font-mono bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded cursor-pointer"
+                    title="Add 1 hour"
+                  >
+                    +1h
+                  </button>
+                  <button
+                    type="button"
+                    onClick={resetToNow}
+                    className="px-2.5 py-1 text-xs bg-zinc-800 hover:bg-yellow-500 hover:text-black text-zinc-300 rounded font-medium transition-colors cursor-pointer"
+                  >
+                    Current Hour
+                  </button>
+                </div>
+              </div>
             </div>
+
             <div className="flex items-center gap-4 text-xs text-zinc-400">
               <span className="flex items-center gap-1.5">
                 <span className="w-3 h-3 rounded-full bg-emerald-500/30 border border-emerald-500"></span>
-                Standard Work Window (9am – 5pm)
+                Work Hours (9am – 5pm)
               </span>
               <span className="flex items-center gap-1.5">
                 <span className="w-3 h-3 rounded-full bg-zinc-800 border border-zinc-700"></span>
@@ -197,31 +245,60 @@ export default function TimezonePlanner() {
             </div>
           </div>
 
-          <input
-            type="range"
-            min={0}
-            max={23}
-            value={selectedHour}
-            onChange={(e) => setSelectedHour(parseInt(e.target.value, 10))}
-            className="w-full h-2 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-yellow-400"
-          />
+          {/* Slider & Mathematically Aligned Ticks */}
+          <div className="relative pt-2 pb-6">
+            <input
+              type="range"
+              min={0}
+              max={23}
+              step={1}
+              value={selectedHour}
+              onChange={(e) => setSelectedHour(parseInt(e.target.value, 10))}
+              className="w-full h-2.5 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-yellow-400"
+            />
 
-          <div className="flex justify-between text-[10px] text-zinc-500 font-mono">
-            <span>12 AM</span>
-            <span>3 AM</span>
-            <span>6 AM</span>
-            <span>9 AM</span>
-            <span>12 PM</span>
-            <span>3 PM</span>
-            <span>6 PM</span>
-            <span>9 PM</span>
-            <span>11 PM</span>
+            {/* Positioned Tick Labels */}
+            <div className="relative w-full h-4 mt-2">
+              {SLIDER_TICKS.map((tick) => {
+                const percent = (tick.hr / 23) * 100
+                const isCurrent = Math.abs(selectedHour - tick.hr) <= 1
+
+                return (
+                  <button
+                    key={tick.hr}
+                    type="button"
+                    onClick={() => setSelectedHour(tick.hr)}
+                    style={{ left: `${percent}%` }}
+                    className={`absolute -translate-x-1/2 text-[10px] font-mono whitespace-nowrap transition-colors cursor-pointer ${
+                      selectedHour === tick.hr
+                        ? 'text-yellow-400 font-bold'
+                        : isCurrent
+                        ? 'text-zinc-300'
+                        : 'text-zinc-500 hover:text-zinc-300'
+                    }`}
+                  >
+                    {tick.label}
+                  </button>
+                )
+              })}
+            </div>
           </div>
         </div>
 
         {/* Visual Multi-Zone Matrix */}
-        <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4 sm:p-6 space-y-4 overflow-x-auto">
-          <div className="min-w-[700px] space-y-3">
+        <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4 sm:p-6 space-y-3 overflow-x-auto">
+          <div className="min-w-[720px] space-y-2.5">
+            {/* Synchronized 24-Hour Header Ruler */}
+            <div className="flex items-center justify-between pb-1 px-1 border-b border-zinc-800/80 text-[11px] text-zinc-400">
+              <span className="font-semibold uppercase tracking-wider text-zinc-400">
+                City / Region
+              </span>
+              <span className="font-mono text-zinc-400">
+                24-Hour Timeline ({userTz.replace('_', ' ')})
+              </span>
+            </div>
+
+            {/* Matrix Rows */}
             {activeCities.map((city) => {
               const refDate = getReferenceDateForHour(selectedHour)
               const formattedCurrent = formatTimeForZone(refDate, city.zone)
@@ -262,7 +339,7 @@ export default function TimezonePlanner() {
                     </div>
                   </div>
 
-                  {/* 24-Hour Visual Heatmap Track */}
+                  {/* 24-Hour Clickable Heatmap Track */}
                   <div className="grid grid-cols-24 gap-0.5 h-6 rounded bg-zinc-900/60 p-0.5">
                     {hoursRange.map((hr) => {
                       const hourDate = getReferenceDateForHour(hr)
@@ -275,10 +352,10 @@ export default function TimezonePlanner() {
                           key={hr}
                           type="button"
                           onClick={() => setSelectedHour(hr)}
-                          title={`${city.name}: ${formatTimeForZone(hourDate, city.zone)}`}
+                          title={`${city.name}: ${formatTimeForZone(hourDate, city.zone)} (Click to select)`}
                           className={`h-full rounded-xs transition-all cursor-pointer ${
                             isSelected
-                              ? 'ring-2 ring-yellow-400 z-10'
+                              ? 'bg-yellow-400/20 ring-2 ring-yellow-400 z-10'
                               : isWorking
                               ? 'bg-emerald-500/40 hover:bg-emerald-500/60'
                               : 'bg-zinc-900 hover:bg-zinc-800'
@@ -293,7 +370,7 @@ export default function TimezonePlanner() {
           </div>
         </div>
 
-        {/* Add Cities Dropdown & Controls */}
+        {/* Add Cities Dropdown */}
         <div className="bg-zinc-900/80 border border-zinc-800 rounded-xl p-5 space-y-3">
           <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider">
             Add Another Region / Time Zone
