@@ -9,6 +9,7 @@ type ToolSlug =
   | 'qr-code-generator'
   | 'dpi-calculator'
   | 'timezone-planner'
+  | 'json-formatter'
 
 interface ToolData {
   title: string
@@ -225,6 +226,36 @@ const toolContent: Record<ToolSlug, ToolData> = {
       {
         q: 'Is there a limit to how many time zones I can compare?',
         a: 'No. You can add as many global cities and team locations as needed to coordinate cross-border projects.',
+      },
+    ],
+  },
+  'json-formatter': {
+    title: 'Client-Side JSON Formatter, Validator & Minifier',
+    description:
+      'Format, beautify, validate, and minify JSON data entirely in your web browser. Features real-time syntax checking with precise line and column error indicators, quick auto-fix utilities, and total client-side privacy for sensitive API tokens and payloads.',
+    steps: [
+      'Paste your raw JSON string or drop a .json file directly into the editor.',
+      'Choose your formatting preference (2 spaces, 4 spaces, or tabs) or select Minify.',
+      'Inspect any highlighted syntax errors or use "Auto-Fix" to repair common quotation and trailing comma issues.',
+      'Click "Copy Output" or "Download .json" to export your clean, valid payload.',
+    ],
+    features: [
+      { title: 'Complete Client-Side Privacy', desc: 'Private API responses, tokens, and schemas are never transmitted across the network.' },
+      { title: 'Line & Character Error Callouts', desc: 'Pinpoints syntax errors immediately with specific line and character locations.' },
+      { title: 'Auto-Fix Engine', desc: 'Automatically corrects common errors such as trailing commas and unquoted object keys.' },
+    ],
+    faqs: [
+      {
+        q: 'Is my confidential JSON data safe here?',
+        a: 'Yes. QuickTools processes JSON entirely within your browser runtime using standard JavaScript parsing. No data is ever sent to or logged on any external server.',
+      },
+      {
+        q: 'What is the difference between formatted and minified JSON?',
+        a: 'Formatted JSON includes whitespace and line breaks for human readability during debugging. Minified JSON strips all whitespace, drastically reducing file size for production network transfer.',
+      },
+      {
+        q: 'Can I format large JSON files?',
+        a: 'Yes. Because operations rely on your local device memory rather than remote server queues, large payloads process smoothly without network timeouts.',
       },
     ],
   },

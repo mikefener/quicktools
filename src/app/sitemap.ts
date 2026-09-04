@@ -13,6 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/tools/qr-code-generator',
     '/tools/dpi-calculator',
     '/tools/timezone-planner',
+    '/tools/json-formatter',
     '/about',
     '/privacy',
     '/terms',

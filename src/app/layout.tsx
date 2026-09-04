@@ -13,12 +13,14 @@ export const metadata: Metadata = {
     template: '%s | QuickTools Web',
   },
   description:
-    'Fast, client-side tools for PDF editing, image conversion, DPI calculation, time zone planning, and text processing. Files never leave your device.',
+    'Fast, client-side tools for PDF editing, image conversion, DPI calculation, time zone planning, and JSON formatting. Files never leave your device.',
   keywords: [
     'client-side tools',
+    'json formatter',
+    'json validator',
+    'json minifier',
     'timezone planner',
     'world time converter',
-    'meeting planner',
     'image converter',
     'image resizer',
     'dpi calculator',
@@ -38,7 +40,7 @@ export const metadata: Metadata = {
     siteName: 'QuickTools Web',
     title: 'QuickTools Web — Free & Private Browser Utilities',
     description:
-      'Fast, private client-side utilities. Coordinate global meetings, calculate print DPI, compress images, split/merge PDFs, and create QR codes.',
+      'Fast, private client-side utilities. Validate JSON, coordinate global meetings, calculate print DPI, compress images, split/merge PDFs, and create QR codes.',
   },
   twitter: {
     card: 'summary_large_image',
@@ -120,6 +122,12 @@ export default function RootLayout({
             </Link>
 
             <div className="flex items-center gap-1 sm:gap-2 text-xs font-medium overflow-x-auto">
+              <Link
+                href="/tools/json-formatter"
+                className="px-2.5 py-1.5 rounded-md text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors whitespace-nowrap"
+              >
+                JSON
+              </Link>
               <Link
                 href="/tools/timezone-planner"
                 className="px-2.5 py-1.5 rounded-md text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors whitespace-nowrap"

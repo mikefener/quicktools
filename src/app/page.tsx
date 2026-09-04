@@ -2,11 +2,23 @@ import Link from 'next/link'
 
 const tools = [
   {
+    title: 'JSON Formatter & Validator',
+    description: 'Format, validate, repair, and minify JSON data with instant syntax error callouts.',
+    href: '/tools/json-formatter',
+    tag: 'Dev',
+    badge: 'New',
+    icon: (
+      <svg className="w-5 h-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+      </svg>
+    ),
+  },
+  {
     title: 'Time Zone Planner',
     description: 'Visual 24-hour overlap planner to coordinate remote team meetings across global time zones.',
     href: '/tools/timezone-planner',
     tag: 'Remote',
-    badge: 'New',
+    badge: 'Popular',
     icon: (
       <svg className="w-5 h-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -30,7 +42,7 @@ const tools = [
     description: 'Convert and compress between PNG, JPG, WebP, and AVIF formats client-side.',
     href: '/tools/image-converter',
     tag: 'Image',
-    badge: 'Popular',
+    badge: 'Instant',
     icon: (
       <svg className="w-5 h-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -112,11 +124,11 @@ export default function Home() {
           <span className="text-yellow-400">Files Never Leave Your Device.</span>
         </h1>
         <p className="text-zinc-400 mt-3 max-w-xl text-sm leading-relaxed">
-          High-performance media conversion, timezone planning, print calculators, and PDF tools running entirely on your local hardware. Instant execution with no file size limits or server queues.
+          High-performance JSON validation, media conversion, timezone planning, print calculators, and PDF tools running entirely on your local hardware. Instant execution with no file size limits or server queues.
         </p>
       </section>
 
-      {/* Tools Grid */}
+      {/* Balanced 3x3 Tools Grid */}
       <section className="max-w-5xl mx-auto px-6 pb-12 w-full">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {tools.map((tool) => (
