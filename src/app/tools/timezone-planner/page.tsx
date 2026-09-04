@@ -11,22 +11,132 @@ interface CityZone {
   zone: string
 }
 
-const POPULAR_CITIES: CityZone[] = [
-  { id: 'nyc', name: 'New York', country: 'United States', zone: 'America/New_York' },
+const ALL_CITIES: CityZone[] = [
+  // Europe
   { id: 'lon', name: 'London', country: 'United Kingdom', zone: 'Europe/London' },
+  { id: 'man', name: 'Manchester', country: 'United Kingdom', zone: 'Europe/London' },
+  { id: 'dub', name: 'Dublin', country: 'Ireland', zone: 'Europe/Dublin' },
+  { id: 'par', name: 'Paris', country: 'France', zone: 'Europe/Paris' },
+  { id: 'lyo', name: 'Lyon', country: 'France', zone: 'Europe/Paris' },
+  { id: 'ber', name: 'Berlin', country: 'Germany', zone: 'Europe/Berlin' },
+  { id: 'mun', name: 'Munich', country: 'Germany', zone: 'Europe/Berlin' },
+  { id: 'fra', name: 'Frankfurt', country: 'Germany', zone: 'Europe/Berlin' },
+  { id: 'rom', name: 'Rome', country: 'Italy', zone: 'Europe/Rome' },
+  { id: 'mil', name: 'Milan', country: 'Italy', zone: 'Europe/Rome' },
+  { id: 'nap', name: 'Naples', country: 'Italy', zone: 'Europe/Rome' },
+  { id: 'mad', name: 'Madrid', country: 'Spain', zone: 'Europe/Madrid' },
+  { id: 'bcn', name: 'Barcelona', country: 'Spain', zone: 'Europe/Madrid' },
+  { id: 'ams', name: 'Amsterdam', country: 'Netherlands', zone: 'Europe/Amsterdam' },
+  { id: 'bru', name: 'Brussels', country: 'Belgium', zone: 'Europe/Brussels' },
+  { id: 'lis', name: 'Lisbon', country: 'Portugal', zone: 'Europe/Lisbon' },
+  { id: 'vie', name: 'Vienna', country: 'Austria', zone: 'Europe/Vienna' },
+  { id: 'zur', name: 'Zurich', country: 'Switzerland', zone: 'Europe/Zurich' },
+  { id: 'gva', name: 'Geneva', country: 'Switzerland', zone: 'Europe/Zurich' },
+  { id: 'ath', name: 'Athens', country: 'Greece', zone: 'Europe/Athens' },
+  { id: 'nic', name: 'Nicosia', country: 'Cyprus', zone: 'Asia/Nicosia' },
+  { id: 'lim', name: 'Limassol', country: 'Cyprus', zone: 'Asia/Nicosia' },
+  { id: 'ist', name: 'Istanbul', country: 'Turkey', zone: 'Europe/Istanbul' },
+  { id: 'ank', name: 'Ankara', country: 'Turkey', zone: 'Europe/Istanbul' },
+  { id: 'war', name: 'Warsaw', country: 'Poland', zone: 'Europe/Warsaw' },
+  { id: 'prg', name: 'Prague', country: 'Czech Republic', zone: 'Europe/Prague' },
+  { id: 'bud', name: 'Budapest', country: 'Hungary', zone: 'Europe/Budapest' },
+  { id: 'buc', name: 'Bucharest', country: 'Romania', zone: 'Europe/Bucharest' },
+  { id: 'sto', name: 'Stockholm', country: 'Sweden', zone: 'Europe/Stockholm' },
+  { id: 'osl', name: 'Oslo', country: 'Norway', zone: 'Europe/Oslo' },
+  { id: 'cph', name: 'Copenhagen', country: 'Denmark', zone: 'Europe/Copenhagen' },
+  { id: 'hel', name: 'Helsinki', country: 'Finland', zone: 'Europe/Helsinki' },
+  { id: 'kyi', name: 'Kyiv', country: 'Ukraine', zone: 'Europe/Kyiv' },
+  { id: 'sof', name: 'Sofia', country: 'Bulgaria', zone: 'Europe/Sofia' },
+  { id: 'zag', name: 'Zagreb', country: 'Croatia', zone: 'Europe/Zagreb' },
+  { id: 'bel', name: 'Belgrade', country: 'Serbia', zone: 'Europe/Belgrade' },
+
+  // North America
+  { id: 'nyc', name: 'New York', country: 'United States', zone: 'America/New_York' },
+  { id: 'bos', name: 'Boston', country: 'United States', zone: 'America/New_York' },
+  { id: 'mia', name: 'Miami', country: 'United States', zone: 'America/New_York' },
+  { id: 'atl', name: 'Atlanta', country: 'United States', zone: 'America/New_York' },
+  { id: 'was', name: 'Washington D.C.', country: 'United States', zone: 'America/New_York' },
+  { id: 'chi', name: 'Chicago', country: 'United States', zone: 'America/Chicago' },
+  { id: 'dal', name: 'Dallas', country: 'United States', zone: 'America/Chicago' },
+  { id: 'hou', name: 'Houston', country: 'United States', zone: 'America/Chicago' },
+  { id: 'aus', name: 'Austin', country: 'United States', zone: 'America/Chicago' },
+  { id: 'den', name: 'Denver', country: 'United States', zone: 'America/Denver' },
+  { id: 'phx', name: 'Phoenix', country: 'United States', zone: 'America/Phoenix' },
+  { id: 'lax', name: 'Los Angeles', country: 'United States', zone: 'America/Los_Angeles' },
   { id: 'sfo', name: 'San Francisco', country: 'United States', zone: 'America/Los_Angeles' },
-  { id: 'ber', name: 'Berlin / Paris', country: 'European Union', zone: 'Europe/Berlin' },
-  { id: 'ath', name: 'Athens / Nicosia', country: 'Eastern Europe', zone: 'Europe/Athens' },
-  { id: 'dxb', name: 'Dubai', country: 'United Arab Emirates', zone: 'Asia/Dubai' },
-  { id: 'del', name: 'New Delhi / Mumbai', country: 'India', zone: 'Asia/Kolkata' },
-  { id: 'sin', name: 'Singapore', country: 'Singapore', zone: 'Asia/Singapore' },
-  { id: 'tyo', name: 'Tokyo', country: 'Japan', zone: 'Asia/Tokyo' },
-  { id: 'syd', name: 'Sydney', country: 'Australia', zone: 'Australia/Sydney' },
-  { id: 'sao', name: 'São Paulo', country: 'Brazil', zone: 'America/Sao_Paulo' },
+  { id: 'sea', name: 'Seattle', country: 'United States', zone: 'America/Los_Angeles' },
+  { id: 'las', name: 'Las Vegas', country: 'United States', zone: 'America/Los_Angeles' },
+  { id: 'anc', name: 'Anchorage', country: 'United States', zone: 'America/Anchorage' },
+  { id: 'hnl', name: 'Honolulu', country: 'United States', zone: 'Pacific/Honolulu' },
   { id: 'tor', name: 'Toronto', country: 'Canada', zone: 'America/Toronto' },
+  { id: 'mtl', name: 'Montreal', country: 'Canada', zone: 'America/Toronto' },
+  { id: 'van', name: 'Vancouver', country: 'Canada', zone: 'America/Vancouver' },
+  { id: 'cgy', name: 'Calgary', country: 'Canada', zone: 'America/Edmonton' },
+  { id: 'mex', name: 'Mexico City', country: 'Mexico', zone: 'America/Mexico_City' },
+  { id: 'gdl', name: 'Guadalajara', country: 'Mexico', zone: 'America/Mexico_City' },
+
+  // South America
+  { id: 'sao', name: 'São Paulo', country: 'Brazil', zone: 'America/Sao_Paulo' },
+  { id: 'rio', name: 'Rio de Janeiro', country: 'Brazil', zone: 'America/Sao_Paulo' },
+  { id: 'bue', name: 'Buenos Aires', country: 'Argentina', zone: 'America/Argentina/Buenos_Aires' },
+  { id: 'bog', name: 'Bogotá', country: 'Colombia', zone: 'America/Bogota' },
+  { id: 'lim_pe', name: 'Lima', country: 'Peru', zone: 'America/Lima' },
+  { id: 'scl', name: 'Santiago', country: 'Chile', zone: 'America/Santiago' },
+  { id: 'uio', name: 'Quito', country: 'Ecuador', zone: 'America/Guayaquil' },
+  { id: 'ccs', name: 'Caracas', country: 'Venezuela', zone: 'America/Caracas' },
+  { id: 'mvd', name: 'Montevideo', country: 'Uruguay', zone: 'America/Montevideo' },
+
+  // Middle East & Africa
+  { id: 'dxb', name: 'Dubai', country: 'United Arab Emirates', zone: 'Asia/Dubai' },
+  { id: 'auh', name: 'Abu Dhabi', country: 'United Arab Emirates', zone: 'Asia/Dubai' },
+  { id: 'ruh', name: 'Riyadh', country: 'Saudi Arabia', zone: 'Asia/Riyadh' },
+  { id: 'jed', name: 'Jeddah', country: 'Saudi Arabia', zone: 'Asia/Riyadh' },
+  { id: 'doh', name: 'Doha', country: 'Qatar', zone: 'Asia/Qatar' },
+  { id: 'kwi', name: 'Kuwait City', country: 'Kuwait', zone: 'Asia/Kuwait' },
+  { id: 'tlv', name: 'Tel Aviv', country: 'Israel', zone: 'Asia/Jerusalem' },
+  { id: 'amm', name: 'Amman', country: 'Jordan', zone: 'Asia/Amman' },
+  { id: 'bey', name: 'Beirut', country: 'Lebanon', zone: 'Asia/Beirut' },
+  { id: 'cai', name: 'Cairo', country: 'Egypt', zone: 'Africa/Cairo' },
+  { id: 'cas', name: 'Casablanca', country: 'Morocco', zone: 'Africa/Casablanca' },
+  { id: 'jnb', name: 'Johannesburg', country: 'South Africa', zone: 'Africa/Johannesburg' },
+  { id: 'cpt', name: 'Cape Town', country: 'South Africa', zone: 'Africa/Johannesburg' },
+  { id: 'nbo', name: 'Nairobi', country: 'Kenya', zone: 'Africa/Nairobi' },
+  { id: 'los', name: 'Lagos', country: 'Nigeria', zone: 'Africa/Lagos' },
+  { id: 'acc', name: 'Accra', country: 'Ghana', zone: 'Africa/Accra' },
+  { id: 'add', name: 'Addis Ababa', country: 'Ethiopia', zone: 'Africa/Addis_Ababa' },
+
+  // Asia & Oceania
+  { id: 'del', name: 'New Delhi', country: 'India', zone: 'Asia/Kolkata' },
+  { id: 'bom', name: 'Mumbai', country: 'India', zone: 'Asia/Kolkata' },
+  { id: 'blr', name: 'Bengaluru', country: 'India', zone: 'Asia/Kolkata' },
+  { id: 'hyd', name: 'Hyderabad', country: 'India', zone: 'Asia/Kolkata' },
+  { id: 'sin', name: 'Singapore', country: 'Singapore', zone: 'Asia/Singapore' },
+  { id: 'kul', name: 'Kuala Lumpur', country: 'Malaysia', zone: 'Asia/Kuala_Lumpur' },
+  { id: 'bkk', name: 'Bangkok', country: 'Thailand', zone: 'Asia/Bangkok' },
+  { id: 'jkt', name: 'Jakarta', country: 'Indonesia', zone: 'Asia/Jakarta' },
+  { id: 'mnl', name: 'Manila', country: 'Philippines', zone: 'Asia/Manila' },
+  { id: 'sgn', name: 'Ho Chi Minh City', country: 'Vietnam', zone: 'Asia/Ho_Chi_Minh' },
+  { id: 'han', name: 'Hanoi', country: 'Vietnam', zone: 'Asia/Bangkok' },
+  { id: 'tyo', name: 'Tokyo', country: 'Japan', zone: 'Asia/Tokyo' },
+  { id: 'osa', name: 'Osaka', country: 'Japan', zone: 'Asia/Tokyo' },
+  { id: 'sel', name: 'Seoul', country: 'South Korea', zone: 'Asia/Seoul' },
+  { id: 'bjs', name: 'Beijing', country: 'China', zone: 'Asia/Shanghai' },
+  { id: 'sha', name: 'Shanghai', country: 'China', zone: 'Asia/Shanghai' },
+  { id: 'szx', name: 'Shenzhen', country: 'China', zone: 'Asia/Shanghai' },
+  { id: 'hkg', name: 'Hong Kong', country: 'Hong Kong', zone: 'Asia/Hong_Kong' },
+  { id: 'tpe', name: 'Taipei', country: 'Taiwan', zone: 'Asia/Taipei' },
+  { id: 'khi', name: 'Karachi', country: 'Pakistan', zone: 'Asia/Karachi' },
+  { id: 'lhr', name: 'Lahore', country: 'Pakistan', zone: 'Asia/Karachi' },
+  { id: 'dac', name: 'Dhaka', country: 'Bangladesh', zone: 'Asia/Dhaka' },
+  { id: 'cmb', name: 'Colombo', country: 'Sri Lanka', zone: 'Asia/Colombo' },
+  { id: 'syd', name: 'Sydney', country: 'Australia', zone: 'Australia/Sydney' },
+  { id: 'mel', name: 'Melbourne', country: 'Australia', zone: 'Australia/Melbourne' },
+  { id: 'bne', name: 'Brisbane', country: 'Australia', zone: 'Australia/Brisbane' },
+  { id: 'per', name: 'Perth', country: 'Australia', zone: 'Australia/Perth' },
+  { id: 'akl', name: 'Auckland', country: 'New Zealand', zone: 'Pacific/Auckland' },
+  { id: 'wlg', name: 'Wellington', country: 'New Zealand', zone: 'Pacific/Auckland' },
 ]
 
-// Mathematically aligned tick marks for 24-hour range (0 to 23)
 const SLIDER_TICKS = [
   { hr: 0, label: '12 AM' },
   { hr: 3, label: '3 AM' },
@@ -46,7 +156,6 @@ export default function TimezonePlanner() {
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [userTz, setUserTz] = useState<string>('UTC')
 
-  // Detect local client timezone on mount
   useEffect(() => {
     try {
       const detected = Intl.DateTimeFormat().resolvedOptions().timeZone
@@ -90,7 +199,7 @@ export default function TimezonePlanner() {
 
   const activeCities = useMemo(() => {
     return selectedCityIds
-      .map((id) => POPULAR_CITIES.find((c) => c.id === id))
+      .map((id) => ALL_CITIES.find((c) => c.id === id))
       .filter((c): c is CityZone => Boolean(c))
   }, [selectedCityIds])
 
@@ -156,12 +265,15 @@ export default function TimezonePlanner() {
     setSelectedHour(new Date().getHours())
   }
 
-  const filteredSearch = POPULAR_CITIES.filter(
-    (c) =>
-      !selectedCityIds.includes(c.id) &&
-      (c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        c.country.toLowerCase().includes(searchQuery.toLowerCase()))
-  )
+  const filteredSearch = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase()
+    if (!q) return []
+    return ALL_CITIES.filter(
+      (c) =>
+        !selectedCityIds.includes(c.id) &&
+        (c.name.toLowerCase().includes(q) || c.country.toLowerCase().includes(q))
+    )
+  }, [searchQuery, selectedCityIds])
 
   const hoursRange = Array.from({ length: 24 }, (_, i) => i)
 
@@ -257,7 +369,6 @@ export default function TimezonePlanner() {
               className="w-full h-2.5 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-yellow-400"
             />
 
-            {/* Positioned Tick Labels */}
             <div className="relative w-full h-4 mt-2">
               {SLIDER_TICKS.map((tick) => {
                 const percent = (tick.hr / 23) * 100
@@ -288,7 +399,6 @@ export default function TimezonePlanner() {
         {/* Visual Multi-Zone Matrix */}
         <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4 sm:p-6 space-y-3 overflow-x-auto">
           <div className="min-w-[720px] space-y-2.5">
-            {/* Synchronized 24-Hour Header Ruler */}
             <div className="flex items-center justify-between pb-1 px-1 border-b border-zinc-800/80 text-[11px] text-zinc-400">
               <span className="font-semibold uppercase tracking-wider text-zinc-400">
                 City / Region
@@ -298,7 +408,6 @@ export default function TimezonePlanner() {
               </span>
             </div>
 
-            {/* Matrix Rows */}
             {activeCities.map((city) => {
               const refDate = getReferenceDateForHour(selectedHour)
               const formattedCurrent = formatTimeForZone(refDate, city.zone)
@@ -339,7 +448,7 @@ export default function TimezonePlanner() {
                     </div>
                   </div>
 
-                  {/* 24-Hour Clickable Heatmap Track */}
+                  {/* 24-Hour Heatmap Track */}
                   <div className="grid grid-cols-24 gap-0.5 h-6 rounded bg-zinc-900/60 p-0.5">
                     {hoursRange.map((hr) => {
                       const hourDate = getReferenceDateForHour(hr)
@@ -370,15 +479,21 @@ export default function TimezonePlanner() {
           </div>
         </div>
 
-        {/* Add Cities Dropdown */}
+        {/* Add Cities Search Bar */}
         <div className="bg-zinc-900/80 border border-zinc-800 rounded-xl p-5 space-y-3">
-          <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider">
-            Add Another Region / Time Zone
-          </label>
+          <div className="flex items-center justify-between">
+            <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider">
+              Add Another Region / Time Zone
+            </label>
+            <span className="text-[11px] text-zinc-500">
+              {ALL_CITIES.length} cities available
+            </span>
+          </div>
+
           <div className="relative">
             <input
               type="text"
-              placeholder="Search cities (e.g., Tokyo, Dubai, Sydney)..."
+              placeholder="Search cities or countries (e.g. Rome, Milan, Italy, Zurich, Tokyo)..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-yellow-500"
@@ -386,9 +501,11 @@ export default function TimezonePlanner() {
           </div>
 
           {searchQuery.trim() !== '' && (
-            <div className="max-h-48 overflow-y-auto border border-zinc-800 rounded-lg bg-zinc-950 divide-y divide-zinc-800/60">
+            <div className="max-h-56 overflow-y-auto border border-zinc-800 rounded-lg bg-zinc-950 divide-y divide-zinc-800/60 shadow-xl">
               {filteredSearch.length === 0 ? (
-                <div className="p-3 text-xs text-zinc-500 text-center">No matching cities found</div>
+                <div className="p-4 text-xs text-zinc-500 text-center">
+                  No matching cities found for &quot;{searchQuery}&quot;
+                </div>
               ) : (
                 filteredSearch.map((city) => (
                   <button
@@ -398,10 +515,11 @@ export default function TimezonePlanner() {
                       addCity(city.id)
                       setSearchQuery('')
                     }}
-                    className="w-full text-left px-4 py-2.5 text-xs text-zinc-300 hover:bg-zinc-900 hover:text-yellow-400 flex items-center justify-between cursor-pointer"
+                    className="w-full text-left px-4 py-2.5 text-xs text-zinc-300 hover:bg-zinc-900 hover:text-yellow-400 flex items-center justify-between cursor-pointer transition-colors"
                   >
                     <span>
-                      {city.name} <span className="text-zinc-500">({city.country})</span>
+                      <strong className="text-white font-medium">{city.name}</strong>{' '}
+                      <span className="text-zinc-500">({city.country})</span>
                     </span>
                     <span className="text-yellow-400 text-xs font-semibold">+ Add</span>
                   </button>
