@@ -3,139 +3,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import ToolGuide from '@/components/ToolGuide'
-
-interface CityZone {
-  id: string
-  name: string
-  country: string
-  zone: string
-}
-
-const ALL_CITIES: CityZone[] = [
-  // Europe
-  { id: 'lon', name: 'London', country: 'United Kingdom', zone: 'Europe/London' },
-  { id: 'man', name: 'Manchester', country: 'United Kingdom', zone: 'Europe/London' },
-  { id: 'dub', name: 'Dublin', country: 'Ireland', zone: 'Europe/Dublin' },
-  { id: 'par', name: 'Paris', country: 'France', zone: 'Europe/Paris' },
-  { id: 'lyo', name: 'Lyon', country: 'France', zone: 'Europe/Paris' },
-  { id: 'ber', name: 'Berlin', country: 'Germany', zone: 'Europe/Berlin' },
-  { id: 'mun', name: 'Munich', country: 'Germany', zone: 'Europe/Berlin' },
-  { id: 'fra', name: 'Frankfurt', country: 'Germany', zone: 'Europe/Berlin' },
-  { id: 'rom', name: 'Rome', country: 'Italy', zone: 'Europe/Rome' },
-  { id: 'mil', name: 'Milan', country: 'Italy', zone: 'Europe/Rome' },
-  { id: 'nap', name: 'Naples', country: 'Italy', zone: 'Europe/Rome' },
-  { id: 'mad', name: 'Madrid', country: 'Spain', zone: 'Europe/Madrid' },
-  { id: 'bcn', name: 'Barcelona', country: 'Spain', zone: 'Europe/Madrid' },
-  { id: 'ams', name: 'Amsterdam', country: 'Netherlands', zone: 'Europe/Amsterdam' },
-  { id: 'bru', name: 'Brussels', country: 'Belgium', zone: 'Europe/Brussels' },
-  { id: 'lis', name: 'Lisbon', country: 'Portugal', zone: 'Europe/Lisbon' },
-  { id: 'vie', name: 'Vienna', country: 'Austria', zone: 'Europe/Vienna' },
-  { id: 'zur', name: 'Zurich', country: 'Switzerland', zone: 'Europe/Zurich' },
-  { id: 'gva', name: 'Geneva', country: 'Switzerland', zone: 'Europe/Zurich' },
-  { id: 'ath', name: 'Athens', country: 'Greece', zone: 'Europe/Athens' },
-  { id: 'nic', name: 'Nicosia', country: 'Cyprus', zone: 'Asia/Nicosia' },
-  { id: 'lim', name: 'Limassol', country: 'Cyprus', zone: 'Asia/Nicosia' },
-  { id: 'ist', name: 'Istanbul', country: 'Turkey', zone: 'Europe/Istanbul' },
-  { id: 'ank', name: 'Ankara', country: 'Turkey', zone: 'Europe/Istanbul' },
-  { id: 'war', name: 'Warsaw', country: 'Poland', zone: 'Europe/Warsaw' },
-  { id: 'prg', name: 'Prague', country: 'Czech Republic', zone: 'Europe/Prague' },
-  { id: 'bud', name: 'Budapest', country: 'Hungary', zone: 'Europe/Budapest' },
-  { id: 'buc', name: 'Bucharest', country: 'Romania', zone: 'Europe/Bucharest' },
-  { id: 'sto', name: 'Stockholm', country: 'Sweden', zone: 'Europe/Stockholm' },
-  { id: 'osl', name: 'Oslo', country: 'Norway', zone: 'Europe/Oslo' },
-  { id: 'cph', name: 'Copenhagen', country: 'Denmark', zone: 'Europe/Copenhagen' },
-  { id: 'hel', name: 'Helsinki', country: 'Finland', zone: 'Europe/Helsinki' },
-  { id: 'kyi', name: 'Kyiv', country: 'Ukraine', zone: 'Europe/Kyiv' },
-  { id: 'sof', name: 'Sofia', country: 'Bulgaria', zone: 'Europe/Sofia' },
-  { id: 'zag', name: 'Zagreb', country: 'Croatia', zone: 'Europe/Zagreb' },
-  { id: 'bel', name: 'Belgrade', country: 'Serbia', zone: 'Europe/Belgrade' },
-
-  // North America
-  { id: 'nyc', name: 'New York', country: 'United States', zone: 'America/New_York' },
-  { id: 'bos', name: 'Boston', country: 'United States', zone: 'America/New_York' },
-  { id: 'mia', name: 'Miami', country: 'United States', zone: 'America/New_York' },
-  { id: 'atl', name: 'Atlanta', country: 'United States', zone: 'America/New_York' },
-  { id: 'was', name: 'Washington D.C.', country: 'United States', zone: 'America/New_York' },
-  { id: 'chi', name: 'Chicago', country: 'United States', zone: 'America/Chicago' },
-  { id: 'dal', name: 'Dallas', country: 'United States', zone: 'America/Chicago' },
-  { id: 'hou', name: 'Houston', country: 'United States', zone: 'America/Chicago' },
-  { id: 'aus', name: 'Austin', country: 'United States', zone: 'America/Chicago' },
-  { id: 'den', name: 'Denver', country: 'United States', zone: 'America/Denver' },
-  { id: 'phx', name: 'Phoenix', country: 'United States', zone: 'America/Phoenix' },
-  { id: 'lax', name: 'Los Angeles', country: 'United States', zone: 'America/Los_Angeles' },
-  { id: 'sfo', name: 'San Francisco', country: 'United States', zone: 'America/Los_Angeles' },
-  { id: 'sea', name: 'Seattle', country: 'United States', zone: 'America/Los_Angeles' },
-  { id: 'las', name: 'Las Vegas', country: 'United States', zone: 'America/Los_Angeles' },
-  { id: 'anc', name: 'Anchorage', country: 'United States', zone: 'America/Anchorage' },
-  { id: 'hnl', name: 'Honolulu', country: 'United States', zone: 'Pacific/Honolulu' },
-  { id: 'tor', name: 'Toronto', country: 'Canada', zone: 'America/Toronto' },
-  { id: 'mtl', name: 'Montreal', country: 'Canada', zone: 'America/Toronto' },
-  { id: 'van', name: 'Vancouver', country: 'Canada', zone: 'America/Vancouver' },
-  { id: 'cgy', name: 'Calgary', country: 'Canada', zone: 'America/Edmonton' },
-  { id: 'mex', name: 'Mexico City', country: 'Mexico', zone: 'America/Mexico_City' },
-  { id: 'gdl', name: 'Guadalajara', country: 'Mexico', zone: 'America/Mexico_City' },
-
-  // South America
-  { id: 'sao', name: 'São Paulo', country: 'Brazil', zone: 'America/Sao_Paulo' },
-  { id: 'rio', name: 'Rio de Janeiro', country: 'Brazil', zone: 'America/Sao_Paulo' },
-  { id: 'bue', name: 'Buenos Aires', country: 'Argentina', zone: 'America/Argentina/Buenos_Aires' },
-  { id: 'bog', name: 'Bogotá', country: 'Colombia', zone: 'America/Bogota' },
-  { id: 'lim_pe', name: 'Lima', country: 'Peru', zone: 'America/Lima' },
-  { id: 'scl', name: 'Santiago', country: 'Chile', zone: 'America/Santiago' },
-  { id: 'uio', name: 'Quito', country: 'Ecuador', zone: 'America/Guayaquil' },
-  { id: 'ccs', name: 'Caracas', country: 'Venezuela', zone: 'America/Caracas' },
-  { id: 'mvd', name: 'Montevideo', country: 'Uruguay', zone: 'America/Montevideo' },
-
-  // Middle East & Africa
-  { id: 'dxb', name: 'Dubai', country: 'United Arab Emirates', zone: 'Asia/Dubai' },
-  { id: 'auh', name: 'Abu Dhabi', country: 'United Arab Emirates', zone: 'Asia/Dubai' },
-  { id: 'ruh', name: 'Riyadh', country: 'Saudi Arabia', zone: 'Asia/Riyadh' },
-  { id: 'jed', name: 'Jeddah', country: 'Saudi Arabia', zone: 'Asia/Riyadh' },
-  { id: 'doh', name: 'Doha', country: 'Qatar', zone: 'Asia/Qatar' },
-  { id: 'kwi', name: 'Kuwait City', country: 'Kuwait', zone: 'Asia/Kuwait' },
-  { id: 'tlv', name: 'Tel Aviv', country: 'Israel', zone: 'Asia/Jerusalem' },
-  { id: 'amm', name: 'Amman', country: 'Jordan', zone: 'Asia/Amman' },
-  { id: 'bey', name: 'Beirut', country: 'Lebanon', zone: 'Asia/Beirut' },
-  { id: 'cai', name: 'Cairo', country: 'Egypt', zone: 'Africa/Cairo' },
-  { id: 'cas', name: 'Casablanca', country: 'Morocco', zone: 'Africa/Casablanca' },
-  { id: 'jnb', name: 'Johannesburg', country: 'South Africa', zone: 'Africa/Johannesburg' },
-  { id: 'cpt', name: 'Cape Town', country: 'South Africa', zone: 'Africa/Johannesburg' },
-  { id: 'nbo', name: 'Nairobi', country: 'Kenya', zone: 'Africa/Nairobi' },
-  { id: 'los', name: 'Lagos', country: 'Nigeria', zone: 'Africa/Lagos' },
-  { id: 'acc', name: 'Accra', country: 'Ghana', zone: 'Africa/Accra' },
-  { id: 'add', name: 'Addis Ababa', country: 'Ethiopia', zone: 'Africa/Addis_Ababa' },
-
-  // Asia & Oceania
-  { id: 'del', name: 'New Delhi', country: 'India', zone: 'Asia/Kolkata' },
-  { id: 'bom', name: 'Mumbai', country: 'India', zone: 'Asia/Kolkata' },
-  { id: 'blr', name: 'Bengaluru', country: 'India', zone: 'Asia/Kolkata' },
-  { id: 'hyd', name: 'Hyderabad', country: 'India', zone: 'Asia/Kolkata' },
-  { id: 'sin', name: 'Singapore', country: 'Singapore', zone: 'Asia/Singapore' },
-  { id: 'kul', name: 'Kuala Lumpur', country: 'Malaysia', zone: 'Asia/Kuala_Lumpur' },
-  { id: 'bkk', name: 'Bangkok', country: 'Thailand', zone: 'Asia/Bangkok' },
-  { id: 'jkt', name: 'Jakarta', country: 'Indonesia', zone: 'Asia/Jakarta' },
-  { id: 'mnl', name: 'Manila', country: 'Philippines', zone: 'Asia/Manila' },
-  { id: 'sgn', name: 'Ho Chi Minh City', country: 'Vietnam', zone: 'Asia/Ho_Chi_Minh' },
-  { id: 'han', name: 'Hanoi', country: 'Vietnam', zone: 'Asia/Bangkok' },
-  { id: 'tyo', name: 'Tokyo', country: 'Japan', zone: 'Asia/Tokyo' },
-  { id: 'osa', name: 'Osaka', country: 'Japan', zone: 'Asia/Tokyo' },
-  { id: 'sel', name: 'Seoul', country: 'South Korea', zone: 'Asia/Seoul' },
-  { id: 'bjs', name: 'Beijing', country: 'China', zone: 'Asia/Shanghai' },
-  { id: 'sha', name: 'Shanghai', country: 'China', zone: 'Asia/Shanghai' },
-  { id: 'szx', name: 'Shenzhen', country: 'China', zone: 'Asia/Shanghai' },
-  { id: 'hkg', name: 'Hong Kong', country: 'Hong Kong', zone: 'Asia/Hong_Kong' },
-  { id: 'tpe', name: 'Taipei', country: 'Taiwan', zone: 'Asia/Taipei' },
-  { id: 'khi', name: 'Karachi', country: 'Pakistan', zone: 'Asia/Karachi' },
-  { id: 'lhr', name: 'Lahore', country: 'Pakistan', zone: 'Asia/Karachi' },
-  { id: 'dac', name: 'Dhaka', country: 'Bangladesh', zone: 'Asia/Dhaka' },
-  { id: 'cmb', name: 'Colombo', country: 'Sri Lanka', zone: 'Asia/Colombo' },
-  { id: 'syd', name: 'Sydney', country: 'Australia', zone: 'Australia/Sydney' },
-  { id: 'mel', name: 'Melbourne', country: 'Australia', zone: 'Australia/Melbourne' },
-  { id: 'bne', name: 'Brisbane', country: 'Australia', zone: 'Australia/Brisbane' },
-  { id: 'per', name: 'Perth', country: 'Australia', zone: 'Australia/Perth' },
-  { id: 'akl', name: 'Auckland', country: 'New Zealand', zone: 'Pacific/Auckland' },
-  { id: 'wlg', name: 'Wellington', country: 'New Zealand', zone: 'Pacific/Auckland' },
-]
+import { ALL_CITIES, COMMON_TIMEZONES, type CityZone } from './cities'
 
 const SLIDER_TICKS = [
   { hr: 0, label: '12 AM' },
@@ -150,39 +18,66 @@ const SLIDER_TICKS = [
 ]
 
 export default function TimezonePlanner() {
-  const [selectedCityIds, setSelectedCityIds] = useState<string[]>(['nyc', 'lon', 'ber'])
+  const [selectedCityIds, setSelectedCityIds] = useState<string[]>(['flr', 'nyc', 'lon'])
+  const [customCities, setCustomCities] = useState<CityZone[]>([])
   const [selectedHour, setSelectedHour] = useState<number>(() => new Date().getHours())
   const [copied, setCopied] = useState<boolean>(false)
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [userTz, setUserTz] = useState<string>('UTC')
 
+  // Custom city modal/form state
+  const [isAddingCustom, setIsAddingCustom] = useState<boolean>(false)
+  const [customName, setCustomName] = useState<string>('')
+  const [customCountry, setCustomCountry] = useState<string>('')
+  const [customZone, setCustomZone] = useState<string>('Europe/Rome')
+
   useEffect(() => {
     try {
       const detected = Intl.DateTimeFormat().resolvedOptions().timeZone
-      if (detected) setUserTz(detected)
+      if (detected) {
+        setUserTz(detected)
+        setCustomZone(detected)
+      }
     } catch {
       setUserTz('UTC')
     }
 
-    const saved = localStorage.getItem('quicktools_tz_cities')
-    if (saved) {
-      try {
+    // Load custom cities
+    try {
+      const savedCustom = localStorage.getItem('quicktools_tz_custom_cities')
+      if (savedCustom) {
+        const parsed = JSON.parse(savedCustom)
+        if (Array.isArray(parsed)) setCustomCities(parsed)
+      }
+    } catch {
+      // Ignore
+    }
+
+    // Load selected cities
+    try {
+      const saved = localStorage.getItem('quicktools_tz_cities')
+      if (saved) {
         const parsed = JSON.parse(saved)
         if (Array.isArray(parsed) && parsed.length > 0) {
           setSelectedCityIds(parsed)
         }
-      } catch {
-        // Fallback to defaults
       }
+    } catch {
+      // Fallback
     }
   }, [])
+
+  // Combined pool of standard + user-created custom cities
+  const fullCityCatalog = useMemo(() => {
+    return [...customCities, ...ALL_CITIES]
+  }, [customCities])
 
   const updateCities = (newCityIds: string[]) => {
     setSelectedCityIds(newCityIds)
     try {
       localStorage.setItem('quicktools_tz_cities', JSON.stringify(newCityIds))
     } catch {
-      // Ignore storage errors
+      // Ignore
     }
   }
 
@@ -197,11 +92,38 @@ export default function TimezonePlanner() {
     updateCities(selectedCityIds.filter((item) => item !== id))
   }
 
+  const handleCreateCustomCity = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!customName.trim()) return
+
+    const newId = `custom_${Date.now()}`
+    const newEntry: CityZone = {
+      id: newId,
+      name: customName.trim(),
+      country: customCountry.trim() || 'Custom Location',
+      zone: customZone,
+    }
+
+    const updatedCustom = [newEntry, ...customCities]
+    setCustomCities(updatedCustom)
+    try {
+      localStorage.setItem('quicktools_tz_custom_cities', JSON.stringify(updatedCustom))
+    } catch {
+      // Ignore
+    }
+
+    addCity(newId)
+    setCustomName('')
+    setCustomCountry('')
+    setIsAddingCustom(false)
+    setSearchQuery('')
+  }
+
   const activeCities = useMemo(() => {
     return selectedCityIds
-      .map((id) => ALL_CITIES.find((c) => c.id === id))
+      .map((id) => fullCityCatalog.find((c) => c.id === id))
       .filter((c): c is CityZone => Boolean(c))
-  }, [selectedCityIds])
+  }, [selectedCityIds, fullCityCatalog])
 
   const getReferenceDateForHour = (hour: number) => {
     const d = new Date()
@@ -243,10 +165,10 @@ export default function TimezonePlanner() {
     const refDate = getReferenceDateForHour(selectedHour)
     const lines = activeCities.map((c) => {
       const timeStr = formatTimeForZone(refDate, c.zone)
-      return `• ${c.name}: ${timeStr}`
+      return `• ${c.name} (${c.country}): ${timeStr}`
     })
 
-    const textToCopy = `Proposed Meeting Window:\n${lines.join('\n')}\n\nCoordinated with QuickTools Timezone Planner`
+    const textToCopy = `Proposed Meeting Window:\n${lines.join('\n')}\n\nCoordinated via QuickTools Timezone Planner`
     navigator.clipboard.writeText(textToCopy)
     setCopied(true)
     setTimeout(() => setCopied(false), 2500)
@@ -268,12 +190,16 @@ export default function TimezonePlanner() {
   const filteredSearch = useMemo(() => {
     const q = searchQuery.trim().toLowerCase()
     if (!q) return []
-    return ALL_CITIES.filter(
-      (c) =>
-        !selectedCityIds.includes(c.id) &&
-        (c.name.toLowerCase().includes(q) || c.country.toLowerCase().includes(q))
-    )
-  }, [searchQuery, selectedCityIds])
+    return fullCityCatalog
+      .filter(
+        (c) =>
+          !selectedCityIds.includes(c.id) &&
+          (c.name.toLowerCase().includes(q) ||
+            c.country.toLowerCase().includes(q) ||
+            c.zone.toLowerCase().includes(q))
+      )
+      .slice(0, 40) // Responsive limit for smooth rendering
+  }, [searchQuery, selectedCityIds, fullCityCatalog])
 
   const hoursRange = Array.from({ length: 24 }, (_, i) => i)
 
@@ -293,7 +219,7 @@ export default function TimezonePlanner() {
               Visual Time Zone & Overlap Planner
             </h1>
             <p className="text-zinc-400 text-sm mt-1">
-              Compare global working hours side-by-side. 100% calculated client-side in your browser.
+              Compare global and regional working hours side-by-side. 100% calculated client-side in your browser.
             </p>
           </div>
 
@@ -423,6 +349,9 @@ export default function TimezonePlanner() {
                     <div className="flex items-center gap-2">
                       <span className="font-semibold text-sm text-white">{city.name}</span>
                       <span className="text-xs text-zinc-500">({city.country})</span>
+                      <span className="text-[10px] font-mono text-zinc-600 hidden sm:inline">
+                        [{city.zone}]
+                      </span>
                     </div>
 
                     <div className="flex items-center gap-3">
@@ -479,32 +408,103 @@ export default function TimezonePlanner() {
           </div>
         </div>
 
-        {/* Add Cities Search Bar */}
+        {/* Search & Add City Section */}
         <div className="bg-zinc-900/80 border border-zinc-800 rounded-xl p-5 space-y-3">
           <div className="flex items-center justify-between">
             <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider">
-              Add Another Region / Time Zone
+              Search Cities or Add Custom Location
             </label>
             <span className="text-[11px] text-zinc-500">
-              {ALL_CITIES.length} cities available
+              {fullCityCatalog.length} locations available
             </span>
           </div>
 
-          <div className="relative">
+          <div className="flex gap-2">
             <input
               type="text"
-              placeholder="Search cities or countries (e.g. Rome, Milan, Italy, Zurich, Tokyo)..."
+              placeholder="Search by city or country (e.g., Florence, Catania, Rome, Italy, Tokyo)..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-yellow-500"
+              className="flex-1 bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-yellow-500"
             />
+            <button
+              type="button"
+              onClick={() => {
+                setCustomName(searchQuery)
+                setIsAddingCustom(!isAddingCustom)
+              }}
+              className="px-3.5 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-yellow-400 text-xs font-semibold rounded-lg transition-colors cursor-pointer whitespace-nowrap"
+            >
+              {isAddingCustom ? 'Cancel' : '+ Custom City'}
+            </button>
           </div>
 
+          {/* Inline Custom City Creator */}
+          {isAddingCustom && (
+            <form
+              onSubmit={handleCreateCustomCity}
+              className="p-4 bg-zinc-950 border border-zinc-800 rounded-lg space-y-3 mt-2"
+            >
+              <div className="text-xs font-semibold text-yellow-400">
+                Add Any Town or Custom Location
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <input
+                  type="text"
+                  required
+                  placeholder="Town / City name (e.g. Sorrento)"
+                  value={customName}
+                  onChange={(e) => setCustomName(e.target.value)}
+                  className="bg-zinc-900 border border-zinc-800 rounded-md px-3 py-2 text-xs text-white focus:outline-none focus:border-yellow-500"
+                />
+                <input
+                  type="text"
+                  placeholder="Region / Country (e.g. Italy)"
+                  value={customCountry}
+                  onChange={(e) => setCustomCountry(e.target.value)}
+                  className="bg-zinc-900 border border-zinc-800 rounded-md px-3 py-2 text-xs text-white focus:outline-none focus:border-yellow-500"
+                />
+                <select
+                  value={customZone}
+                  onChange={(e) => setCustomZone(e.target.value)}
+                  className="bg-zinc-900 border border-zinc-800 rounded-md px-3 py-2 text-xs text-white focus:outline-none focus:border-yellow-500 cursor-pointer"
+                >
+                  {COMMON_TIMEZONES.map((tz) => (
+                    <option key={tz.zone} value={tz.zone}>
+                      {tz.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex justify-end gap-2 pt-1">
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-yellow-500 hover:bg-yellow-400 text-black font-semibold text-xs rounded-md cursor-pointer transition-colors"
+                >
+                  Save & Add to Timeline
+                </button>
+              </div>
+            </form>
+          )}
+
+          {/* Search Dropdown Results */}
           {searchQuery.trim() !== '' && (
-            <div className="max-h-56 overflow-y-auto border border-zinc-800 rounded-lg bg-zinc-950 divide-y divide-zinc-800/60 shadow-xl">
+            <div className="max-h-60 overflow-y-auto border border-zinc-800 rounded-lg bg-zinc-950 divide-y divide-zinc-800/60 shadow-xl">
               {filteredSearch.length === 0 ? (
-                <div className="p-4 text-xs text-zinc-500 text-center">
-                  No matching cities found for &quot;{searchQuery}&quot;
+                <div className="p-4 text-center space-y-2">
+                  <p className="text-xs text-zinc-500">
+                    No predefined city found for &quot;{searchQuery}&quot;
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCustomName(searchQuery)
+                      setIsAddingCustom(true)
+                    }}
+                    className="text-xs text-yellow-400 hover:underline font-medium cursor-pointer"
+                  >
+                    + Add &quot;{searchQuery}&quot; as a custom city
+                  </button>
                 </div>
               ) : (
                 filteredSearch.map((city) => (
@@ -530,7 +530,6 @@ export default function TimezonePlanner() {
         </div>
       </div>
 
-      {/* Guide, FAQs, and Ad Placement */}
       <ToolGuide slug="timezone-planner" />
     </main>
   )
