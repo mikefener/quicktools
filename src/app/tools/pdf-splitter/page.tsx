@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { PDFDocument } from 'pdf-lib'
+import ToolGuide from '@/components/ToolGuide'
 
 export default function PdfSplitter() {
   const [pdfFile, setPdfFile] = useState<File | null>(null)
@@ -159,6 +160,9 @@ export default function PdfSplitter() {
           </div>
         )}
       </div>
+
+      {/* Guide, FAQs, and Ad Placement */}
+      <ToolGuide slug="pdf-splitter" />
     </main>
   )
 }

@@ -3,9 +3,10 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import QRCode from 'qrcode'
+import ToolGuide from '@/components/ToolGuide'
 
 export default function QrCodeGenerator() {
-  const [text, setText] = useState('https://quicktools.dev')
+  const [text, setText] = useState('https://quicktoolsweb.com')
   const [errorCorrectionLevel, setErrorCorrectionLevel] = useState<'L' | 'M' | 'Q' | 'H'>('M')
   const [size, setSize] = useState<number>(300)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
@@ -123,6 +124,9 @@ export default function QrCodeGenerator() {
           </button>
         </div>
       </div>
+
+      {/* Guide, FAQs, and Ad Placement */}
+      <ToolGuide slug="qr-code-generator" />
     </main>
   )
 }

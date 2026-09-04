@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import ToolGuide from '@/components/ToolGuide'
 
 export default function ImageResizer() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
@@ -211,6 +212,9 @@ export default function ImageResizer() {
           </div>
         )}
       </div>
+
+      {/* Guide, FAQs, and Ad Placement */}
+      <ToolGuide slug="image-resizer" />
     </main>
   )
 }

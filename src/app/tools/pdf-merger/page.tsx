@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { PDFDocument } from 'pdf-lib'
+import ToolGuide from '@/components/ToolGuide'
 
 export default function PdfMerger() {
   const [pdfFiles, setPdfFiles] = useState<File[]>([])
@@ -124,6 +125,9 @@ export default function PdfMerger() {
           </div>
         )}
       </div>
+
+      {/* Guide, FAQs, and Ad Placement */}
+      <ToolGuide slug="pdf-merger" />
     </main>
   )
 }

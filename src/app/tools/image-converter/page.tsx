@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import ToolGuide from '@/components/ToolGuide'
 
 type FormatType = 'image/webp' | 'image/jpeg' | 'image/png' | 'image/avif'
 
@@ -168,6 +169,9 @@ export default function ImageConverter() {
           </div>
         )}
       </div>
+
+      {/* Guide, FAQs, and Ad Placement */}
+      <ToolGuide slug="image-converter" />
     </main>
   )
 }

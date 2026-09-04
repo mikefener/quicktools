@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import ToolGuide from '@/components/ToolGuide'
 
 export default function SvgToPng() {
   const [svgFile, setSvgFile] = useState<File | null>(null)
@@ -140,6 +141,9 @@ export default function SvgToPng() {
           </div>
         )}
       </div>
+
+      {/* Guide, FAQs, and Ad Placement */}
+      <ToolGuide slug="svg-to-png" />
     </main>
   )
 }
