@@ -25,7 +25,7 @@ export default function AboutPage() {
         <div>
           <h2 className="text-xl font-semibold mb-2 text-white">Contact & Inquiries</h2>
           <p>
-            For feedback, bug reports, or feature requests, contact us anytime at support@quicktoolsweb.com.
+            For feedback, bug reports, or feature requests, contact us anytime at mikefener@gmail.com.
           </p>
         </div>
       </section>

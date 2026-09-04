@@ -12,10 +12,10 @@ export default function ContactPage() {
           Send an email to our support inbox and we will reply as soon as possible:
         </p>
         <a 
-          href="mailto:support@quicktoolsweb.com" 
+          href="mailto:mikefener@gmail.com" 
           className="text-blue-600 font-medium hover:underline"
         >
-          support@quicktoolsweb.com
+          mikefener@gmail.com
         </a>
       </div>
     </main>

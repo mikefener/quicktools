@@ -52,7 +52,7 @@ export default function PrivacyPage() {
         <div>
           <h2 className="text-xl font-semibold mb-2">4. Contact</h2>
           <p>
-            For privacy-related questions, contact us at support@quicktoolsweb.com.
+            For privacy-related questions, contact us at mikefener@gmail.com.
           </p>
         </div>
       </section>

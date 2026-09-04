@@ -36,7 +36,7 @@ export default function TermsPage() {
         <div>
           <h2 className="text-xl font-semibold mb-2">5. Contact</h2>
           <p>
-            For questions about these terms, contact us at support@quicktoolsweb.com.
+            For questions about these terms, contact us at mikefener@gmail.com.
           </p>
         </div>
       </section>
