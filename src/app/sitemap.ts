@@ -11,6 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/tools/pdf-merger',
     '/tools/pdf-splitter',
     '/tools/qr-code-generator',
+    '/about',
     '/privacy',
     '/terms',
     '/contact',
@@ -20,6 +21,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
     changeFrequency: route === '' ? 'daily' : 'weekly',
-    priority: route === '' ? 1.0 : route === '/privacy' || route === '/terms' || route === '/contact' ? 0.3 : 0.8,
+    priority: route === '' ? 1.0 : route.startsWith('/tools') ? 0.8 : 0.3,
   }))
 }

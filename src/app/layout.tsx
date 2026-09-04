@@ -155,6 +155,9 @@ export default function RootLayout({
               <span>— 100% Client-Side Privacy. Zero server uploads.</span>
             </div>
             <div className="flex items-center gap-4 text-zinc-400 flex-wrap justify-center">
+              <Link href="/about" className="hover:text-yellow-400 transition-colors">
+                About
+              </Link>
               <Link href="/privacy" className="hover:text-yellow-400 transition-colors">
                 Privacy Policy
               </Link>
