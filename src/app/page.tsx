@@ -2,6 +2,30 @@ import Link from 'next/link'
 
 const tools = [
   {
+    title: 'Time Zone Planner',
+    description: 'Visual 24-hour overlap planner to coordinate remote team meetings across global time zones.',
+    href: '/tools/timezone-planner',
+    tag: 'Remote',
+    badge: 'New',
+    icon: (
+      <svg className="w-5 h-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    ),
+  },
+  {
+    title: 'DPI & Print Calculator',
+    description: 'Calculate physical print sizes, target DPI, and exact pixel dimensions for crisp printing.',
+    href: '/tools/dpi-calculator',
+    tag: 'Print',
+    badge: '300 DPI',
+    icon: (
+      <svg className="w-5 h-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+      </svg>
+    ),
+  },
+  {
     title: 'Image Converter',
     description: 'Convert and compress between PNG, JPG, WebP, and AVIF formats client-side.',
     href: '/tools/image-converter',
@@ -22,18 +46,6 @@ const tools = [
     icon: (
       <svg className="w-5 h-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-      </svg>
-    ),
-  },
-  {
-    title: 'DPI & Print Calculator',
-    description: 'Calculate physical print sizes, target DPI, and exact pixel dimensions for crisp printing.',
-    href: '/tools/dpi-calculator',
-    tag: 'Print',
-    badge: '300 DPI',
-    icon: (
-      <svg className="w-5 h-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
       </svg>
     ),
   },
@@ -100,7 +112,7 @@ export default function Home() {
           <span className="text-yellow-400">Files Never Leave Your Device.</span>
         </h1>
         <p className="text-zinc-400 mt-3 max-w-xl text-sm leading-relaxed">
-          High-performance media conversion, print calculators, and PDF tools running entirely on your local hardware. Instant execution with no file size limits or server queues.
+          High-performance media conversion, timezone planning, print calculators, and PDF tools running entirely on your local hardware. Instant execution with no file size limits or server queues.
         </p>
       </section>
 

@@ -8,6 +8,7 @@ type ToolSlug =
   | 'pdf-splitter'
   | 'qr-code-generator'
   | 'dpi-calculator'
+  | 'timezone-planner'
 
 interface ToolData {
   title: string
@@ -194,6 +195,36 @@ const toolContent: Record<ToolSlug, ToolData> = {
       {
         q: 'Are my uploaded images sent to any server?',
         a: 'Never. The file header and dimensions are parsed strictly in your browser memory using HTML5 image element APIs.',
+      },
+    ],
+  },
+  'timezone-planner': {
+    title: 'Visual Time Zone Converter & Remote Meeting Overlap Planner',
+    description:
+      'Compare multiple international time zones side-by-side on an interactive 24-hour visual timeline. Easily find overlapping working hours for remote teams, clients, and distributed projects without sign-ups or server storage.',
+    steps: [
+      'Add cities or time zones to your active timeline comparison.',
+      'Click or drag across the 24-hour timeline bar to inspect times simultaneously.',
+      'Identify green-highlighted overlapping business hours (9:00 AM – 5:00 PM).',
+      'Click "Copy Available Times" to paste cleanly formatted slots into Slack or email.',
+    ],
+    features: [
+      { title: 'Visual Overlap Heatmap', desc: 'Working hours (9 AM – 5 PM) are highlighted automatically to surface shared meeting windows.' },
+      { title: '1-Click Slack / Email Export', desc: 'Instantly copy human-readable meeting schedules across all chosen time zones.' },
+      { title: 'Zero Tracking or Cloud State', desc: 'Your selected cities and preferences are stored only in your local browser storage.' },
+    ],
+    faqs: [
+      {
+        q: 'How does daylight saving time (DST) work here?',
+        a: 'The tool uses the native JavaScript Intl.DateTimeFormat API and your device operating system timezone database, guaranteeing up-to-date daylight saving time offsets.',
+      },
+      {
+        q: 'Will my saved cities be retained when I reload the page?',
+        a: 'Yes. Your active city list is preserved in your browser localStorage and mirrored directly in the shareable URL.',
+      },
+      {
+        q: 'Is there a limit to how many time zones I can compare?',
+        a: 'No. You can add as many global cities and team locations as needed to coordinate cross-border projects.',
       },
     ],
   },
