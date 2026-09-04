@@ -79,7 +79,7 @@ export default function Home() {
   return (
     <main className="min-h-[calc(100vh-3.5rem)] bg-zinc-950 text-white flex flex-col justify-between">
       {/* Hero Section */}
-      <section className="max-w-5xl mx-auto px-6 pt-10 pb-4 w-full text-center sm:text-left">
+      <section className="max-w-5xl mx-auto px-6 pt-10 pb-8 w-full text-center sm:text-left">
         <div className="inline-block text-[11px] font-mono font-medium text-yellow-400/90 bg-yellow-400/10 border border-yellow-400/20 px-2.5 py-0.5 rounded-full mb-3">
           100% Client-Side Processing
         </div>
@@ -90,19 +90,6 @@ export default function Home() {
         <p className="text-zinc-400 mt-3 max-w-xl text-sm leading-relaxed">
           High-performance media conversion and PDF tools running entirely on your local hardware. Instant execution with no file size limits or server queues.
         </p>
-
-        {/* Display Frame */}
-        <div className="w-full my-8">
-          <div className="w-full h-24 sm:h-28 rounded-xl border border-dashed border-zinc-800 bg-zinc-900/40 flex flex-col items-center justify-center text-zinc-500 text-xs">
-            <span className="text-[10px] uppercase tracking-widest text-zinc-600 mb-1 font-mono">
-              Display Placement Area
-            </span>
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-yellow-400/70"></span>
-              <span>Responsive Header Space (728x90 / Auto)</span>
-            </div>
-          </div>
-        </div>
       </section>
 
       {/* Tools Grid (Balanced 3x2) */}
