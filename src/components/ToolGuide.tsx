@@ -7,6 +7,7 @@ type ToolSlug =
   | 'pdf-merger'
   | 'pdf-splitter'
   | 'qr-code-generator'
+  | 'dpi-calculator'
 
 interface ToolData {
   title: string
@@ -164,6 +165,35 @@ const toolContent: Record<ToolSlug, ToolData> = {
       {
         q: 'Can I use these QR codes for commercial projects?',
         a: 'Yes. All generated codes are free for both personal and commercial use without licensing fees or watermarks.',
+      },
+    ],
+  },
+  'dpi-calculator': {
+    title: 'Client-Side DPI, PPI & Print Size Calculator',
+    description:
+      'Calculate physical print dimensions (inches & cm) from digital pixel resolutions, or find the exact pixel dimensions required for standard poster and photo prints at 300 DPI, 150 DPI, and 72 DPI. Fully calculated in your browser without uploading files.',
+    steps: [
+      'Switch between "Pixels to Print" or "Print Size to Pixels" mode.',
+      'Input your image dimensions and select your target DPI (300 DPI is standard for crisp printing).',
+      'Optionally drop an image file to auto-detect its exact pixel resolution locally.',
+    ],
+    features: [
+      { title: 'Print Dimension Matrix', desc: 'Instant conversions across inches, centimeters, and standard international paper sizes.' },
+      { title: 'Local Image Detection', desc: 'Drop an image to read pixel width and height without uploading it anywhere.' },
+      { title: 'Quality Grading', desc: 'Real-time assessment indicating whether your resolution produces high-quality or pixelated prints.' },
+    ],
+    faqs: [
+      {
+        q: 'What is DPI and why does 300 DPI matter for printing?',
+        a: 'DPI stands for Dots Per Inch. 300 DPI is the industry gold standard for print production, ensuring sharp, non-pixelated results when viewed up close.',
+      },
+      {
+        q: 'How do I calculate print size from pixels?',
+        a: 'Divide your image pixel dimensions by the target DPI. For instance, a 3000 x 2400 pixel image printed at 300 DPI yields a 10 x 8 inch print.',
+      },
+      {
+        q: 'Are my uploaded images sent to any server?',
+        a: 'Never. The file header and dimensions are parsed strictly in your browser memory using HTML5 image element APIs.',
       },
     ],
   },

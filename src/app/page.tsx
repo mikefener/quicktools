@@ -26,6 +26,18 @@ const tools = [
     ),
   },
   {
+    title: 'DPI & Print Calculator',
+    description: 'Calculate physical print sizes, target DPI, and exact pixel dimensions for crisp printing.',
+    href: '/tools/dpi-calculator',
+    tag: 'Print',
+    badge: '300 DPI',
+    icon: (
+      <svg className="w-5 h-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+      </svg>
+    ),
+  },
+  {
     title: 'SVG to PNG Exporter',
     description: 'Render vector SVGs into high-resolution transparent PNG images up to 8x.',
     href: '/tools/svg-to-png',
@@ -88,11 +100,11 @@ export default function Home() {
           <span className="text-yellow-400">Files Never Leave Your Device.</span>
         </h1>
         <p className="text-zinc-400 mt-3 max-w-xl text-sm leading-relaxed">
-          High-performance media conversion and PDF tools running entirely on your local hardware. Instant execution with no file size limits or server queues.
+          High-performance media conversion, print calculators, and PDF tools running entirely on your local hardware. Instant execution with no file size limits or server queues.
         </p>
       </section>
 
-      {/* Tools Grid (Balanced 3x2) */}
+      {/* Tools Grid */}
       <section className="max-w-5xl mx-auto px-6 pb-12 w-full">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {tools.map((tool) => (

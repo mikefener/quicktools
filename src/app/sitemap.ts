@@ -11,6 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/tools/pdf-merger',
     '/tools/pdf-splitter',
     '/tools/qr-code-generator',
+    '/tools/dpi-calculator',
     '/about',
     '/privacy',
     '/terms',
