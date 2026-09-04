@@ -7,9 +7,88 @@ export interface CityZone {
 
 export const ALL_CITIES: CityZone[] = [
   // ==========================================
-  // --- 1. RUSSIA & EURASIA (All 11 Time Zones) ---
+  // --- 1. AFRICA (North, West, East, Central & Southern) ---
   // ==========================================
-  // European Russia (UTC+3 / MSK)
+  // North Africa
+  { id: 'eg_cai', name: 'Cairo', country: 'Egypt', zone: 'Africa/Cairo' },
+  { id: 'eg_aly', name: 'Alexandria', country: 'Egypt', zone: 'Africa/Cairo' },
+  { id: 'eg_gza', name: 'Giza', country: 'Egypt', zone: 'Africa/Cairo' },
+  { id: 'ma_cas', name: 'Casablanca', country: 'Morocco', zone: 'Africa/Casablanca' },
+  { id: 'ma_rba', name: 'Rabat', country: 'Morocco', zone: 'Africa/Casablanca' },
+  { id: 'ma_rak', name: 'Marrakech', country: 'Morocco', zone: 'Africa/Casablanca' },
+  { id: 'ma_tng', name: 'Tangier', country: 'Morocco', zone: 'Africa/Casablanca' },
+  { id: 'dz_alg', name: 'Algiers', country: 'Algeria', zone: 'Africa/Algiers' },
+  { id: 'dz_orn', name: 'Oran', country: 'Algeria', zone: 'Africa/Algiers' },
+  { id: 'tn_tun', name: 'Tunis', country: 'Tunisia', zone: 'Africa/Tunis' },
+  { id: 'tn_sfx', name: 'Sfax', country: 'Tunisia', zone: 'Africa/Tunis' },
+  { id: 'ly_tip', name: 'Tripoli', country: 'Libya', zone: 'Africa/Tripoli' },
+  { id: 'sd_krt', name: 'Khartoum', country: 'Sudan', zone: 'Africa/Khartoum' },
+
+  // West Africa (UTC / WAT)
+  { id: 'ng_los', name: 'Lagos', country: 'Nigeria', zone: 'Africa/Lagos' },
+  { id: 'ng_abj', name: 'Abuja', country: 'Nigeria', zone: 'Africa/Lagos' },
+  { id: 'ng_kan', name: 'Kano', country: 'Nigeria', zone: 'Africa/Lagos' },
+  { id: 'ng_iba', name: 'Ibadan', country: 'Nigeria', zone: 'Africa/Lagos' },
+  { id: 'ng_phc', name: 'Port Harcourt', country: 'Nigeria', zone: 'Africa/Lagos' },
+  { id: 'gh_acc', name: 'Accra', country: 'Ghana', zone: 'Africa/Accra' },
+  { id: 'gh_kms', name: 'Kumasi', country: 'Ghana', zone: 'Africa/Accra' },
+  { id: 'ci_abj', name: 'Abidjan', country: 'Ivory Coast', zone: 'Africa/Abidjan' },
+  { id: 'sn_dkr', name: 'Dakar', country: 'Senegal', zone: 'Africa/Dakar' },
+  { id: 'ml_bko', name: 'Bamako', country: 'Mali', zone: 'Africa/Bamako' },
+  { id: 'gn_cky', name: 'Conakry', country: 'Guinea', zone: 'Africa/Conakry' },
+  { id: 'bf_oua', name: 'Ouagadougou', country: 'Burkina Faso', zone: 'Africa/Ouagadougou' },
+  { id: 'tg_lfw', name: 'Lomé', country: 'Togo', zone: 'Africa/Lome' },
+  { id: 'bj_coo', name: 'Cotonou', country: 'Benin', zone: 'Africa/Porto-Novo' },
+  { id: 'ne_nim', name: 'Niamey', country: 'Niger', zone: 'Africa/Niamey' },
+  { id: 'sl_fna', name: 'Freetown', country: 'Sierra Leone', zone: 'Africa/Freetown' },
+  { id: 'lr_mlw', name: 'Monrovia', country: 'Liberia', zone: 'Africa/Monrovia' },
+
+  // East Africa & Horn of Africa (EAT, UTC+3)
+  { id: 'ke_nbo', name: 'Nairobi', country: 'Kenya', zone: 'Africa/Nairobi' },
+  { id: 'ke_mba', name: 'Mombasa', country: 'Kenya', zone: 'Africa/Nairobi' },
+  { id: 'et_add', name: 'Addis Ababa', country: 'Ethiopia', zone: 'Africa/Addis_Ababa' },
+  { id: 'tz_dar', name: 'Dar es Salaam', country: 'Tanzania', zone: 'Africa/Dar_es_Salaam' },
+  { id: 'tz_dod', name: 'Dodoma', country: 'Tanzania', zone: 'Africa/Dar_es_Salaam' },
+  { id: 'tz_znz', name: 'Zanzibar City', country: 'Tanzania', zone: 'Africa/Dar_es_Salaam' },
+  { id: 'ug_ebb', name: 'Kampala', country: 'Uganda', zone: 'Africa/Kampala' },
+  { id: 'rw_kgl', name: 'Kigali', country: 'Rwanda', zone: 'Africa/Kigali' },
+  { id: 'bi_bjm', name: 'Bujumbura', country: 'Burundi', zone: 'Africa/Bujumbura' },
+  { id: 'so_mgq', name: 'Mogadishu', country: 'Somalia', zone: 'Africa/Mogadishu' },
+  { id: 'dj_jib', name: 'Djibouti', country: 'Djibouti', zone: 'Africa/Djibouti' },
+  { id: 'er_asm', name: 'Asmara', country: 'Eritrea', zone: 'Africa/Asmara' },
+  { id: 'ss_jub', name: 'Juba', country: 'South Sudan', zone: 'Africa/Juba' },
+  { id: 'mu_plu', name: 'Port Louis', country: 'Mauritius', zone: 'Indian/Mauritius' },
+  { id: 'sc_sez', name: 'Victoria', country: 'Seychelles', zone: 'Indian/Mahe' },
+  { id: 'mg_tnr', name: 'Antananarivo', country: 'Madagascar', zone: 'Indian/Antananarivo' },
+
+  // Central Africa (WAT / CAT)
+  { id: 'cd_fih', name: 'Kinshasa', country: 'DR Congo', zone: 'Africa/Kinshasa' },
+  { id: 'cd_fbm', name: 'Lubumbashi', country: 'DR Congo', zone: 'Africa/Lubumbashi' },
+  { id: 'cg_bzv', name: 'Brazzaville', country: 'Republic of the Congo', zone: 'Africa/Brazzaville' },
+  { id: 'ao_lad', name: 'Luanda', country: 'Angola', zone: 'Africa/Luanda' },
+  { id: 'cm_dla', name: 'Douala', country: 'Cameroon', zone: 'Africa/Douala' },
+  { id: 'cm_nsi', name: 'Yaoundé', country: 'Cameroon', zone: 'Africa/Douala' },
+  { id: 'ga_lbv', name: 'Libreville', country: 'Gabon', zone: 'Africa/Libreville' },
+  { id: 'td_ndj', name: "N'Djamena", country: 'Chad', zone: 'Africa/Ndjamena' },
+  { id: 'cf_bgf', name: 'Bangui', country: 'Central African Republic', zone: 'Africa/Bangui' },
+  { id: 'gq_ssg', name: 'Malabo', country: 'Equatorial Guinea', zone: 'Africa/Malabo' },
+
+  // Southern Africa (SAST / CAT)
+  { id: 'za_jnb', name: 'Johannesburg', country: 'South Africa', zone: 'Africa/Johannesburg' },
+  { id: 'za_cpt', name: 'Cape Town', country: 'South Africa', zone: 'Africa/Johannesburg' },
+  { id: 'za_dur', name: 'Durban', country: 'South Africa', zone: 'Africa/Johannesburg' },
+  { id: 'za_pry', name: 'Pretoria', country: 'South Africa', zone: 'Africa/Johannesburg' },
+  { id: 'za_plz', name: 'Gqeberha (Port Elizabeth)', country: 'South Africa', zone: 'Africa/Johannesburg' },
+  { id: 'na_wdh', name: 'Windhoek', country: 'Namibia', zone: 'Africa/Windhoek' },
+  { id: 'bw_gbe', name: 'Gaborone', country: 'Botswana', zone: 'Africa/Gaborone' },
+  { id: 'zm_lun', name: 'Lusaka', country: 'Zambia', zone: 'Africa/Lusaka' },
+  { id: 'zw_hre', name: 'Harare', country: 'Zimbabwe', zone: 'Africa/Harare' },
+  { id: 'mz_mpm', name: 'Maputo', country: 'Mozambique', zone: 'Africa/Maputo' },
+  { id: 'mw_llw', name: 'Lilongwe', country: 'Malawi', zone: 'Africa/Blantyre' },
+
+  // ==========================================
+  // --- 2. RUSSIA & EURASIA (All 11 Time Zones) ---
+  // ==========================================
   { id: 'ru_mow', name: 'Moscow', country: 'Russia', zone: 'Europe/Moscow' },
   { id: 'ru_led', name: 'Saint Petersburg', country: 'Russia', zone: 'Europe/Moscow' },
   { id: 'ru_kzn', name: 'Kazan', country: 'Russia', zone: 'Europe/Moscow' },
@@ -25,16 +104,13 @@ export const ALL_CITIES: CityZone[] = [
   { id: 'ru_mcx', name: 'Makhachkala', country: 'Russia', zone: 'Europe/Moscow' },
   { id: 'ru_mmk', name: 'Murmansk', country: 'Russia', zone: 'Europe/Moscow' },
   { id: 'ru_arh', name: 'Arkhangelsk', country: 'Russia', zone: 'Europe/Moscow' },
-  // Kaliningrad (UTC+2)
   { id: 'ru_kgd', name: 'Kaliningrad', country: 'Russia', zone: 'Europe/Kaliningrad' },
-  // Samara Time (UTC+4)
   { id: 'ru_kuf', name: 'Samara', country: 'Russia', zone: 'Europe/Samara' },
   { id: 'ru_tlt', name: 'Tolyatti', country: 'Russia', zone: 'Europe/Samara' },
   { id: 'ru_rtw', name: 'Saratov', country: 'Russia', zone: 'Europe/Samara' },
   { id: 'ru_asf', name: 'Astrakhan', country: 'Russia', zone: 'Europe/Samara' },
   { id: 'ru_ulv', name: 'Ulyanovsk', country: 'Russia', zone: 'Europe/Samara' },
   { id: 'ru_ijx', name: 'Izhevsk', country: 'Russia', zone: 'Europe/Samara' },
-  // Urals (UTC+5)
   { id: 'ru_svx', name: 'Yekaterinburg', country: 'Russia', zone: 'Asia/Yekaterinburg' },
   { id: 'ru_cek', name: 'Chelyabinsk', country: 'Russia', zone: 'Asia/Yekaterinburg' },
   { id: 'ru_ufa', name: 'Ufa', country: 'Russia', zone: 'Asia/Yekaterinburg' },
@@ -42,28 +118,21 @@ export const ALL_CITIES: CityZone[] = [
   { id: 'ru_tjm', name: 'Tyumen', country: 'Russia', zone: 'Asia/Yekaterinburg' },
   { id: 'ru_ren', name: 'Orenburg', country: 'Russia', zone: 'Asia/Yekaterinburg' },
   { id: 'ru_mgn', name: 'Magnitogorsk', country: 'Russia', zone: 'Asia/Yekaterinburg' },
-  // Omsk (UTC+6)
   { id: 'ru_oms', name: 'Omsk', country: 'Russia', zone: 'Asia/Omsk' },
-  // Western Siberia / Krasnoyarsk (UTC+7)
   { id: 'ru_ovb', name: 'Novosibirsk', country: 'Russia', zone: 'Asia/Novosibirsk' },
   { id: 'ru_kja', name: 'Krasnoyarsk', country: 'Russia', zone: 'Asia/Krasnoyarsk' },
   { id: 'ru_bax', name: 'Barnaul', country: 'Russia', zone: 'Asia/Barnaul' },
   { id: 'ru_tof', name: 'Tomsk', country: 'Russia', zone: 'Asia/Tomsk' },
   { id: 'ru_kej', name: 'Kemerovo', country: 'Russia', zone: 'Asia/Kemerovo' },
   { id: 'ru_noz', name: 'Novokuznetsk', country: 'Russia', zone: 'Asia/Novokuznetsk' },
-  // Lake Baikal (UTC+8)
   { id: 'ru_ikt', name: 'Irkutsk', country: 'Russia', zone: 'Asia/Irkutsk' },
   { id: 'ru_uud', name: 'Ulan-Ude', country: 'Russia', zone: 'Asia/Irkutsk' },
-  // Yakutsk & Transbaikalia (UTC+9)
   { id: 'ru_yks', name: 'Yakutsk', country: 'Russia', zone: 'Asia/Yakutsk' },
   { id: 'ru_hta', name: 'Chita', country: 'Russia', zone: 'Asia/Chita' },
-  // Russian Far East & Vladivostok (UTC+10)
   { id: 'ru_vvo', name: 'Vladivostok', country: 'Russia', zone: 'Asia/Vladivostok' },
   { id: 'ru_khv', name: 'Khabarovsk', country: 'Russia', zone: 'Asia/Vladivostok' },
-  // Magadan & Sakhalin (UTC+11)
   { id: 'ru_uus', name: 'Yuzhno-Sakhalinsk', country: 'Russia', zone: 'Asia/Sakhalin' },
   { id: 'ru_gdn', name: 'Magadan', country: 'Russia', zone: 'Asia/Magadan' },
-  // Kamchatka & Chukotka (UTC+12)
   { id: 'ru_pkc', name: 'Petropavlovsk-Kamchatsky', country: 'Russia', zone: 'Asia/Kamchatka' },
   { id: 'ru_dyr', name: 'Anadyr', country: 'Russia', zone: 'Asia/Anadyr' },
 
@@ -97,9 +166,8 @@ export const ALL_CITIES: CityZone[] = [
   { id: 'mn_uln', name: 'Ulaanbaatar', country: 'Mongolia', zone: 'Asia/Ulaanbaatar' },
 
   // ==========================================
-  // --- 2. USA (All 50 States Major Hubs) ---
+  // --- 3. USA (All 50 States Major Hubs) ---
   // ==========================================
-  // US Eastern Time
   { id: 'us_nyc', name: 'New York City', country: 'United States', zone: 'America/New_York' },
   { id: 'us_bos', name: 'Boston', country: 'United States', zone: 'America/New_York' },
   { id: 'us_mia', name: 'Miami', country: 'United States', zone: 'America/New_York' },
@@ -127,7 +195,6 @@ export const ALL_CITIES: CityZone[] = [
   { id: 'us_pvd', name: 'Providence', country: 'United States', zone: 'America/New_York' },
   { id: 'us_bdr', name: 'Hartford', country: 'United States', zone: 'America/New_York' },
   { id: 'us_pwm', name: 'Portland (Maine)', country: 'United States', zone: 'America/New_York' },
-  // US Central Time
   { id: 'us_chi', name: 'Chicago', country: 'United States', zone: 'America/Chicago' },
   { id: 'us_hou', name: 'Houston', country: 'United States', zone: 'America/Chicago' },
   { id: 'us_dal', name: 'Dallas - Fort Worth', country: 'United States', zone: 'America/Chicago' },
@@ -147,19 +214,16 @@ export const ALL_CITIES: CityZone[] = [
   { id: 'us_dsm', name: 'Des Moines', country: 'United States', zone: 'America/Chicago' },
   { id: 'us_lit', name: 'Little Rock', country: 'United States', zone: 'America/Chicago' },
   { id: 'us_bhm', name: 'Birmingham (Alabama)', country: 'United States', zone: 'America/Chicago' },
-  // US Mountain Time
   { id: 'us_den', name: 'Denver', country: 'United States', zone: 'America/Denver' },
   { id: 'us_cos', name: 'Colorado Springs', country: 'United States', zone: 'America/Denver' },
   { id: 'us_slc', name: 'Salt Lake City', country: 'United States', zone: 'America/Denver' },
   { id: 'us_abq', name: 'Albuquerque', country: 'United States', zone: 'America/Denver' },
   { id: 'us_el_paso', name: 'El Paso', country: 'United States', zone: 'America/Denver' },
   { id: 'us_boi', name: 'Boise', country: 'United States', zone: 'America/Boise' },
-  // US Arizona (No Daylight Saving Time)
   { id: 'us_phx', name: 'Phoenix', country: 'United States', zone: 'America/Phoenix' },
   { id: 'us_tus', name: 'Tucson', country: 'United States', zone: 'America/Phoenix' },
   { id: 'us_msa', name: 'Mesa', country: 'United States', zone: 'America/Phoenix' },
   { id: 'us_scd', name: 'Scottsdale', country: 'United States', zone: 'America/Phoenix' },
-  // US Pacific Time
   { id: 'us_lax', name: 'Los Angeles', country: 'United States', zone: 'America/Los_Angeles' },
   { id: 'us_sfo', name: 'San Francisco', country: 'United States', zone: 'America/Los_Angeles' },
   { id: 'us_sjc', name: 'San Jose (Silicon Valley)', country: 'United States', zone: 'America/Los_Angeles' },
@@ -176,7 +240,6 @@ export const ALL_CITIES: CityZone[] = [
   { id: 'us_pdx', name: 'Portland (Oregon)', country: 'United States', zone: 'America/Los_Angeles' },
   { id: 'us_las', name: 'Las Vegas', country: 'United States', zone: 'America/Los_Angeles' },
   { id: 'us_rno', name: 'Reno', country: 'United States', zone: 'America/Los_Angeles' },
-  // US Alaska & Hawaii
   { id: 'us_anc', name: 'Anchorage', country: 'United States', zone: 'America/Anchorage' },
   { id: 'us_fai', name: 'Fairbanks', country: 'United States', zone: 'America/Anchorage' },
   { id: 'us_jno', name: 'Juneau', country: 'United States', zone: 'America/Juneau' },
@@ -184,9 +247,8 @@ export const ALL_CITIES: CityZone[] = [
   { id: 'us_ogg', name: 'Maui (Kahului)', country: 'United States', zone: 'Pacific/Honolulu' },
 
   // ==========================================
-  // --- 3. NORTH AMERICA (Canada, Mexico, Caribbean) ---
+  // --- 4. NORTH AMERICA (Canada, Mexico, Caribbean) ---
   // ==========================================
-  // Canada
   { id: 'ca_tor', name: 'Toronto', country: 'Canada', zone: 'America/Toronto' },
   { id: 'ca_mtl', name: 'Montreal', country: 'Canada', zone: 'America/Toronto' },
   { id: 'ca_ott', name: 'Ottawa', country: 'Canada', zone: 'America/Toronto' },
@@ -204,7 +266,6 @@ export const ALL_CITIES: CityZone[] = [
   { id: 'ca_yvr', name: 'Vancouver', country: 'Canada', zone: 'America/Vancouver' },
   { id: 'ca_yyj', name: 'Victoria', country: 'Canada', zone: 'America/Vancouver' },
   { id: 'ca_ylw', name: 'Kelowna', country: 'Canada', zone: 'America/Vancouver' },
-  // Mexico
   { id: 'mx_mex', name: 'Mexico City', country: 'Mexico', zone: 'America/Mexico_City' },
   { id: 'mx_gdl', name: 'Guadalajara', country: 'Mexico', zone: 'America/Mexico_City' },
   { id: 'mx_mty', name: 'Monterrey', country: 'Mexico', zone: 'America/Monterrey' },
@@ -220,7 +281,6 @@ export const ALL_CITIES: CityZone[] = [
   { id: 'mx_mxl', name: 'Mexicali', country: 'Mexico', zone: 'America/Tijuana' },
   { id: 'mx_cul', name: 'Culiacán', country: 'Mexico', zone: 'America/Mazatlan' },
   { id: 'mx_aca', name: 'Acapulco', country: 'Mexico', zone: 'America/Mexico_City' },
-  // Caribbean & Central America
   { id: 'cu_hav', name: 'Havana', country: 'Cuba', zone: 'America/Havana' },
   { id: 'do_sdq', name: 'Santo Domingo', country: 'Dominican Republic', zone: 'America/Santo_Domingo' },
   { id: 'pr_sju', name: 'San Juan', country: 'Puerto Rico', zone: 'America/Puerto_Rico' },
@@ -234,9 +294,8 @@ export const ALL_CITIES: CityZone[] = [
   { id: 'pa_pty', name: 'Panama City', country: 'Panama', zone: 'America/Panama' },
 
   // ==========================================
-  // --- 4. ASIA (East, Southeast, South & West Asia) ---
+  // --- 5. ASIA (East, Southeast, South & West) ---
   // ==========================================
-  // Japan
   { id: 'jp_tyo', name: 'Tokyo', country: 'Japan', zone: 'Asia/Tokyo' },
   { id: 'jp_yok', name: 'Yokohama', country: 'Japan', zone: 'Asia/Tokyo' },
   { id: 'jp_osa', name: 'Osaka', country: 'Japan', zone: 'Asia/Tokyo' },
@@ -248,7 +307,6 @@ export const ALL_CITIES: CityZone[] = [
   { id: 'jp_hij', name: 'Hiroshima', country: 'Japan', zone: 'Asia/Tokyo' },
   { id: 'jp_sdj', name: 'Sendai', country: 'Japan', zone: 'Asia/Tokyo' },
   { id: 'jp_oka', name: 'Naha (Okinawa)', country: 'Japan', zone: 'Asia/Tokyo' },
-  // South & North Korea
   { id: 'kr_sel', name: 'Seoul', country: 'South Korea', zone: 'Asia/Seoul' },
   { id: 'kr_pus', name: 'Busan', country: 'South Korea', zone: 'Asia/Seoul' },
   { id: 'kr_icn', name: 'Incheon', country: 'South Korea', zone: 'Asia/Seoul' },
@@ -257,7 +315,6 @@ export const ALL_CITIES: CityZone[] = [
   { id: 'kr_gju', name: 'Gwangju', country: 'South Korea', zone: 'Asia/Seoul' },
   { id: 'kr_cju', name: 'Jeju', country: 'South Korea', zone: 'Asia/Seoul' },
   { id: 'kp_fnj', name: 'Pyongyang', country: 'North Korea', zone: 'Asia/Pyongyang' },
-  // Greater China & Taiwan
   { id: 'cn_bjs', name: 'Beijing', country: 'China', zone: 'Asia/Shanghai' },
   { id: 'cn_sha', name: 'Shanghai', country: 'China', zone: 'Asia/Shanghai' },
   { id: 'cn_can', name: 'Guangzhou', country: 'China', zone: 'Asia/Shanghai' },
@@ -280,7 +337,6 @@ export const ALL_CITIES: CityZone[] = [
   { id: 'tw_khh', name: 'Kaohsiung', country: 'Taiwan', zone: 'Asia/Taipei' },
   { id: 'tw_txg', name: 'Taichung', country: 'Taiwan', zone: 'Asia/Taipei' },
   { id: 'tw_hsz', name: 'Hsinchu', country: 'Taiwan', zone: 'Asia/Taipei' },
-  // India & South Asia
   { id: 'in_del', name: 'New Delhi', country: 'India', zone: 'Asia/Kolkata' },
   { id: 'in_bom', name: 'Mumbai', country: 'India', zone: 'Asia/Kolkata' },
   { id: 'in_blr', name: 'Bengaluru (Bangalore)', country: 'India', zone: 'Asia/Kolkata' },
@@ -305,7 +361,6 @@ export const ALL_CITIES: CityZone[] = [
   { id: 'bd_cgp', name: 'Chittagong', country: 'Bangladesh', zone: 'Asia/Dhaka' },
   { id: 'lk_cmb', name: 'Colombo', country: 'Sri Lanka', zone: 'Asia/Colombo' },
   { id: 'np_ktm', name: 'Kathmandu', country: 'Nepal', zone: 'Asia/Kathmandu' },
-  // Southeast Asia
   { id: 'sg_sin', name: 'Singapore', country: 'Singapore', zone: 'Asia/Singapore' },
   { id: 'my_kul', name: 'Kuala Lumpur', country: 'Malaysia', zone: 'Asia/Kuala_Lumpur' },
   { id: 'my_pen', name: 'Penang (George Town)', country: 'Malaysia', zone: 'Asia/Kuala_Lumpur' },
@@ -333,9 +388,8 @@ export const ALL_CITIES: CityZone[] = [
   { id: 'bn_bwn', name: 'Bandar Seri Begawan', country: 'Brunei', zone: 'Asia/Brunei' },
 
   // ==========================================
-  // --- 5. OCEANIA (Australia, NZ & Pacific) ---
+  // --- 6. OCEANIA (Australia, NZ & Pacific) ---
   // ==========================================
-  // Australia
   { id: 'au_syd', name: 'Sydney', country: 'Australia', zone: 'Australia/Sydney' },
   { id: 'au_mel', name: 'Melbourne', country: 'Australia', zone: 'Australia/Melbourne' },
   { id: 'au_bne', name: 'Brisbane', country: 'Australia', zone: 'Australia/Brisbane' },
@@ -353,7 +407,6 @@ export const ALL_CITIES: CityZone[] = [
   { id: 'au_cns', name: 'Cairns', country: 'Australia', zone: 'Australia/Brisbane' },
   { id: 'au_drw', name: 'Darwin', country: 'Australia', zone: 'Australia/Darwin' },
   { id: 'au_asp', name: 'Alice Springs', country: 'Australia', zone: 'Australia/Darwin' },
-  // New Zealand
   { id: 'nz_akl', name: 'Auckland', country: 'New Zealand', zone: 'Pacific/Auckland' },
   { id: 'nz_wlg', name: 'Wellington', country: 'New Zealand', zone: 'Pacific/Auckland' },
   { id: 'nz_chc', name: 'Christchurch', country: 'New Zealand', zone: 'Pacific/Auckland' },
@@ -361,7 +414,6 @@ export const ALL_CITIES: CityZone[] = [
   { id: 'nz_trg', name: 'Tauranga', country: 'New Zealand', zone: 'Pacific/Auckland' },
   { id: 'nz_dud', name: 'Dunedin', country: 'New Zealand', zone: 'Pacific/Auckland' },
   { id: 'nz_zqn', name: 'Queenstown', country: 'New Zealand', zone: 'Pacific/Auckland' },
-  // Pacific Island Nations & Territories
   { id: 'pg_pom', name: 'Port Moresby', country: 'Papua New Guinea', zone: 'Pacific/Port_Moresby' },
   { id: 'fj_nan', name: 'Suva / Nadi', country: 'Fiji', zone: 'Pacific/Fiji' },
   { id: 'nc_nou', name: 'Nouméa', country: 'New Caledonia', zone: 'Pacific/Noumea' },
@@ -374,9 +426,8 @@ export const ALL_CITIES: CityZone[] = [
   { id: 'mp_spn', name: 'Saipan', country: 'Northern Mariana Islands', zone: 'Pacific/Saipan' },
 
   // ==========================================
-  // --- 6. EUROPE (Complete Western, Central & Mediterranean) ---
+  // --- 7. EUROPE (Mediterranean & Regional Coverage) ---
   // ==========================================
-  // Italy Regional
   { id: 'it_rom', name: 'Rome', country: 'Italy', zone: 'Europe/Rome' },
   { id: 'it_mil', name: 'Milan', country: 'Italy', zone: 'Europe/Rome' },
   { id: 'it_nap', name: 'Naples', country: 'Italy', zone: 'Europe/Rome' },
@@ -396,7 +447,6 @@ export const ALL_CITIES: CityZone[] = [
   { id: 'it_sie', name: 'Siena', country: 'Italy', zone: 'Europe/Rome' },
   { id: 'it_cag', name: 'Cagliari', country: 'Italy', zone: 'Europe/Rome' },
   { id: 'it_rni', name: 'Rimini', country: 'Italy', zone: 'Europe/Rome' },
-  // Cyprus & Greece
   { id: 'cy_nic', name: 'Nicosia', country: 'Cyprus', zone: 'Asia/Nicosia' },
   { id: 'cy_lim', name: 'Limassol', country: 'Cyprus', zone: 'Asia/Nicosia' },
   { id: 'cy_lca', name: 'Larnaca', country: 'Cyprus', zone: 'Asia/Nicosia' },
@@ -406,7 +456,6 @@ export const ALL_CITIES: CityZone[] = [
   { id: 'gr_her', name: 'Heraklion (Crete)', country: 'Greece', zone: 'Europe/Athens' },
   { id: 'gr_rho', name: 'Rhodes', country: 'Greece', zone: 'Europe/Athens' },
   { id: 'gr_cfu', name: 'Corfu (Kerkyra)', country: 'Greece', zone: 'Europe/Athens' },
-  // UK, Ireland, France, Germany, Spain, etc.
   { id: 'gb_lon', name: 'London', country: 'United Kingdom', zone: 'Europe/London' },
   { id: 'gb_man', name: 'Manchester', country: 'United Kingdom', zone: 'Europe/London' },
   { id: 'gb_bhx', name: 'Birmingham', country: 'United Kingdom', zone: 'Europe/London' },
@@ -452,7 +501,7 @@ export const ALL_CITIES: CityZone[] = [
   { id: 'tr_ank', name: 'Ankara', country: 'Turkey', zone: 'Europe/Istanbul' },
 
   // ==========================================
-  // --- 7. LATIN AMERICA, MIDDLE EAST & AFRICA ---
+  // --- 8. LATIN AMERICA & MIDDLE EAST ---
   // ==========================================
   { id: 'br_sao', name: 'São Paulo', country: 'Brazil', zone: 'America/Sao_Paulo' },
   { id: 'br_rio', name: 'Rio de Janeiro', country: 'Brazil', zone: 'America/Sao_Paulo' },
@@ -466,14 +515,14 @@ export const ALL_CITIES: CityZone[] = [
   { id: 'qa_doh', name: 'Doha', country: 'Qatar', zone: 'Asia/Qatar' },
   { id: 'kw_kwi', name: 'Kuwait City', country: 'Kuwait', zone: 'Asia/Kuwait' },
   { id: 'il_tlv', name: 'Tel Aviv', country: 'Israel', zone: 'Asia/Jerusalem' },
-  { id: 'eg_cai', name: 'Cairo', country: 'Egypt', zone: 'Africa/Cairo' },
-  { id: 'za_jnb', name: 'Johannesburg', country: 'South Africa', zone: 'Africa/Johannesburg' },
-  { id: 'za_cpt', name: 'Cape Town', country: 'South Africa', zone: 'Africa/Johannesburg' },
-  { id: 'ke_nbo', name: 'Nairobi', country: 'Kenya', zone: 'Africa/Nairobi' },
-  { id: 'ng_los', name: 'Lagos', country: 'Nigeria', zone: 'Africa/Lagos' },
 ]
 
 export const COMMON_TIMEZONES = [
+  { label: 'West Africa Time (WAT, UTC+1 - Lagos, Luanda)', zone: 'Africa/Lagos' },
+  { label: 'Central Africa Time (CAT, UTC+2 - Cairo, Harare, Kigali)', zone: 'Africa/Maputo' },
+  { label: 'East Africa Time (EAT, UTC+3 - Nairobi, Addis Ababa)', zone: 'Africa/Nairobi' },
+  { label: 'South Africa Standard Time (SAST, UTC+2 - Johannesburg)', zone: 'Africa/Johannesburg' },
+  { label: 'Greenwich Mean Time / West Africa (UTC - Accra, Dakar)', zone: 'Africa/Accra' },
   { label: 'Moscow Standard Time (MSK, UTC+3)', zone: 'Europe/Moscow' },
   { label: 'Yekaterinburg Time (YEKT, UTC+5)', zone: 'Asia/Yekaterinburg' },
   { label: 'Novosibirsk / Krasnoyarsk (UTC+7)', zone: 'Asia/Novosibirsk' },
