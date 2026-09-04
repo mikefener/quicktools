@@ -7,13 +7,13 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://quicktools.dev'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://quicktoolsweb.com'),
   title: {
-    default: 'QuickTools — Free Private Browser Utilities',
-    template: '%s | QuickTools',
+    default: 'QuickTools Web — Free & Private Browser Utilities',
+    template: '%s | QuickTools Web',
   },
   description:
-    'Free, high-performance image and PDF tools running 100% in your browser. No file size limits, zero server queues, and total data privacy.',
+    'Fast, client-side tools for PDF editing, image conversion, and text processing. Files never leave your device.',
   keywords: [
     'client-side tools',
     'image converter',
@@ -30,15 +30,15 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://quicktools.dev',
-    siteName: 'QuickTools',
-    title: 'QuickTools — Free Private Browser Utilities',
+    url: 'https://quicktoolsweb.com',
+    siteName: 'QuickTools Web',
+    title: 'QuickTools Web — Free & Private Browser Utilities',
     description:
       'Fast, private client-side utilities. Compress images, split/merge PDFs, and create QR codes without uploading data.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'QuickTools — Free Private Browser Utilities',
+    title: 'QuickTools Web — Free & Private Browser Utilities',
     description: '100% client-side web tools. Zero server storage, complete privacy.',
   },
   robots: {
@@ -55,8 +55,8 @@ export default function RootLayout({
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
-    name: 'QuickTools',
-    url: 'https://quicktools.dev',
+    name: 'QuickTools Web',
+    url: 'https://quicktoolsweb.com',
     applicationCategory: 'UtilitiesApplication',
     operatingSystem: 'All',
     browserRequirements: 'Requires JavaScript. Requires HTML5.',
@@ -70,7 +70,7 @@ export default function RootLayout({
       name: 'Michail Feneridis',
     },
     description:
-      'A suite of private, browser-based utilities for image conversion, PDF manipulation, and QR code generation.',
+      'Fast, client-side tools for PDF editing, image conversion, and text processing. Files never leave your device.',
   }
 
   const adsenseId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID
@@ -83,7 +83,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        {/* Google AdSense Script (Loads automatically when ID is present) */}
+        {/* Google AdSense Script */}
         {adsenseId && (
           <Script
             id="adsbygoogle-init"
