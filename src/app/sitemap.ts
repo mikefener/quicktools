@@ -12,12 +12,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/tools/pdf-splitter',
     '/tools/qr-code-generator',
     '/privacy',
+    '/terms',
+    '/contact',
   ]
 
   return routes.map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
     changeFrequency: route === '' ? 'daily' : 'weekly',
-    priority: route === '' ? 1.0 : route === '/privacy' ? 0.3 : 0.8,
+    priority: route === '' ? 1.0 : route === '/privacy' || route === '/terms' || route === '/contact' ? 0.3 : 0.8,
   }))
 }
