@@ -78,14 +78,29 @@ export default function JsonFormatter() {
     }
   }
 
-  // Common repair engine: handles trailing commas, unquoted keys, and single quotes
+  // Enhanced repair engine: handles comments, stray punctuation, unquoted keys, single quotes, and trailing commas
   const autoFixJson = () => {
     if (!inputJson.trim()) return
     let fixed = inputJson
-      // Convert single quotes to double quotes
-      .replace(/'/g, '"')
-      // Remove trailing commas in objects and arrays
-      .replace(/,\s*([}\]])/g, '$1')
+
+    // 1. Remove single-line comments (// ...) and multi-line comments (/* ... */)
+    fixed = fixed.replace(/\/\/.*$/gm, '')
+    fixed = fixed.replace(/\/\*[\s\S]*?\*\//g, '')
+
+    // 2. Strip stray trailing dots/ellipses after booleans, null, or numbers (e.g., true.. -> true, 15.. -> 15)
+    fixed = fixed.replace(
+      /((?:[:\[,]\s*)(?:true|false|null|-?\d+(?:\.\d+)?))\s*\.+(\s*(?:[,}\]\n\r]|$))/gi,
+      '$1$2'
+    )
+
+    // 3. Fix unquoted keys ({ key: "val" } -> { "key": "val" })
+    fixed = fixed.replace(/([{,]\s*)([a-zA-Z_$][a-zA-Z0-9_$-]*)\s*:/g, '$1"$2":')
+
+    // 4. Convert single-quoted keys and values to double quotes
+    fixed = fixed.replace(/'([^'\\]*(?:\\.[^'\\]*)*)'/g, '"$1"')
+
+    // 5. Remove trailing commas before closing braces and brackets
+    fixed = fixed.replace(/,+(?=\s*[}\]])/g, '')
 
     try {
       const obj = JSON.parse(fixed)
@@ -236,7 +251,7 @@ export default function JsonFormatter() {
               type="button"
               onClick={autoFixJson}
               className="px-2.5 py-1.5 text-xs font-medium bg-zinc-800 hover:bg-emerald-950/60 hover:text-emerald-400 text-zinc-300 border border-transparent hover:border-emerald-800 rounded-md cursor-pointer transition-colors"
-              title="Fix trailing commas and single quotes"
+              title="Fix trailing commas, unquoted keys, single quotes, comments, and stray dots"
             >
               Auto-Fix Syntax
             </button>
