@@ -11,12 +11,14 @@ export default function LocalAIPage() {
   const [input, setInput] = useState("");
   const [attachedContext, setAttachedContext] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
-  const chatBottomRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Auto-scroll on incoming stream tokens
+  // Keep scroll confined strictly inside the chat box without scrolling the page window
   useEffect(() => {
-    chatBottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
   }, [messages]);
 
   const handleSend = () => {
@@ -125,9 +127,8 @@ export default function LocalAIPage() {
                 Initialize Local Engine
               </h2>
               <p className="text-xs text-neutral-400 mt-1">
-                Downloads Llama 3.2 (1B Quantized) into your browser's local
-                cache (~850 MB). You only download this once; future visits run
-                instantly offline.
+                Loads the quantized model into your browser's local cache.
+                Future visits load instantly offline.
               </p>
             </div>
 
@@ -154,7 +155,10 @@ export default function LocalAIPage() {
         {/* Chat Feed */}
         {(status === "ready" || status === "generating") && (
           <div className="flex flex-col gap-4">
-            <div className="min-h-[380px] max-h-[550px] overflow-y-auto p-4 rounded-xl bg-neutral-900 border border-neutral-800 flex flex-col gap-3">
+            <div
+              ref={chatContainerRef}
+              className="min-h-[380px] max-h-[550px] overflow-y-auto p-4 rounded-xl bg-neutral-900 border border-neutral-800 flex flex-col gap-3 scroll-smooth"
+            >
               {messages.length === 0 ? (
                 <div className="m-auto text-center text-neutral-500 text-xs max-w-sm">
                   Model is live in VRAM. Type a message below or attach a code/text
@@ -171,7 +175,7 @@ export default function LocalAIPage() {
                     }`}
                   >
                     <p className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 mb-1">
-                      {msg.role === "user" ? "You" : "Llama 3.2 (Local)"}
+                      {msg.role === "user" ? "You" : "Local AI"}
                     </p>
                     {msg.content || (
                       <span className="animate-pulse text-neutral-400">...</span>
@@ -179,7 +183,6 @@ export default function LocalAIPage() {
                   </div>
                 ))
               )}
-              <div ref={chatBottomRef} />
             </div>
 
             {/* Quick Action Pills */}
