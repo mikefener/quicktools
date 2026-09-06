@@ -87,9 +87,33 @@ export default function LocalAIPage() {
           <div className="p-4 rounded-lg bg-red-950/40 border border-red-800 text-red-300 text-sm">
             <p className="font-semibold">WebGPU is not supported or enabled</p>
             <p className="text-xs mt-1 text-red-400">
-              Please use the latest version of Chrome, Brave, Edge, or Arc on desktop.
-              If using Brave, ensure hardware acceleration is active.
+              Please use Chrome, Brave, or Edge on desktop. Ensure Hardware Acceleration is enabled in your browser settings.
             </p>
+          </div>
+        )}
+
+        {/* Status: Error State */}
+        {status === "error" && (
+          <div className="p-6 rounded-xl bg-red-950/30 border border-red-800/80 flex flex-col items-center text-center gap-3">
+            <h2 className="text-base font-semibold text-red-300">
+              Engine Initialization Failed
+            </h2>
+            <p className="text-xs text-red-400 font-mono max-w-xl break-words bg-black/40 p-3 rounded border border-red-900/50">
+              {progress || "WebGPU adapter request failed or worker was blocked."}
+            </p>
+            <div className="text-xs text-neutral-400 max-w-md text-left mt-2 space-y-1">
+              <p className="font-medium text-neutral-300">Common fixes on Linux / Brave:</p>
+              <ul className="list-disc pl-5 space-y-0.5 text-[11px]">
+                <li>If using <strong>Brave</strong>: click the lion shield icon in the URL bar and toggle shields down for this site (Brave blocks WebGPU fingerprinting by default).</li>
+                <li>Go to <code>brave://settings/system</code> or <code>chrome://settings/system</code> and enable <strong>Use graphics acceleration when available</strong>.</li>
+              </ul>
+            </div>
+            <button
+              onClick={() => loadModel()}
+              className="mt-2 px-5 py-2 rounded-lg bg-amber-400 text-neutral-950 font-semibold text-xs hover:bg-amber-300 transition-all"
+            >
+              Try Again
+            </button>
           </div>
         )}
 
@@ -102,8 +126,8 @@ export default function LocalAIPage() {
               </h2>
               <p className="text-xs text-neutral-400 mt-1">
                 Downloads Llama 3.2 (1B Quantized) into your browser's local
-                IndexedDB cache (~850 MB). You only download this once; future
-                visits run instantly offline.
+                cache (~850 MB). You only download this once; future visits run
+                instantly offline.
               </p>
             </div>
 
@@ -113,7 +137,7 @@ export default function LocalAIPage() {
                   <div className="h-full bg-amber-400 animate-pulse w-full" />
                 </div>
                 <p className="text-xs text-amber-300 font-mono break-words">
-                  {progress || "Compiling WebGPU shaders..."}
+                  {progress || "Initializing Web Worker..."}
                 </p>
               </div>
             ) : (
