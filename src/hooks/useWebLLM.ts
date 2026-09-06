@@ -45,9 +45,8 @@ export function useWebLLM() {
       }
 
       setStatus("loading");
-      setProgress("Verifying local cache and GPU capabilities...");
+      setProgress("Detecting GPU adapter capabilities...");
 
-      // Always reset and spawn a clean worker on initialization or retry
       if (workerRef.current) {
         workerRef.current.terminate();
         workerRef.current = null;
@@ -61,7 +60,13 @@ export function useWebLLM() {
       const hasF16 = adapter.features?.has?.("shader-f16") ?? false;
       const selectedModel = hasF16
         ? "Llama-3.2-1B-Instruct-q4f16_1-MLC"
-        : "Qwen2.5-1.5B-Instruct-q4f32_1-MLC";
+        : "Qwen2.5-0.5B-Instruct-q4f32_1-MLC";
+
+      setProgress(
+        hasF16
+          ? "Hardware supports f16. Initializing Llama 3.2 (q4f16)..."
+          : "Hardware lacks f16 shaders. Initializing universal Qwen 2.5 (q4f32)..."
+      );
 
       workerRef.current = new Worker(
         new URL("../workers/llm.worker.ts", import.meta.url),
@@ -83,13 +88,12 @@ export function useWebLLM() {
       setProgress("");
     } catch (err: any) {
       console.error("Failed to load model:", err);
-      // Clean worker thread on failure so subsequent attempts start fresh
       if (workerRef.current) {
         workerRef.current.terminate();
         workerRef.current = null;
       }
       setStatus("error");
-      setProgress(err?.message || "Download interrupted. Please try again.");
+      setProgress(err?.message || "Engine initialization failed.");
     }
   }, []);
 
