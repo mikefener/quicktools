@@ -27,6 +27,13 @@ export function useWebLLM() {
     if (typeof window !== "undefined" && !(navigator as any).gpu) {
       setStatus("unsupported");
     }
+
+    return () => {
+      if (workerRef.current) {
+        workerRef.current.terminate();
+        workerRef.current = null;
+      }
+    };
   }, []);
 
   const loadModel = useCallback(async () => {
@@ -38,32 +45,28 @@ export function useWebLLM() {
       }
 
       setStatus("loading");
-      setProgress("Detecting GPU adapter capabilities...");
+      setProgress("Verifying local cache and GPU capabilities...");
+
+      // Always reset and spawn a clean worker on initialization or retry
+      if (workerRef.current) {
+        workerRef.current.terminate();
+        workerRef.current = null;
+      }
 
       const adapter = await nav.gpu.requestAdapter();
       if (!adapter) {
         throw new Error("No compatible GPU adapter found.");
       }
 
-      // Check whether this GPU supports 16-bit float shaders.
-      // If unsupported (common on Linux/Mesa drivers), fall back to universal 32-bit (f32) quantization.
       const hasF16 = adapter.features?.has?.("shader-f16") ?? false;
       const selectedModel = hasF16
         ? "Llama-3.2-1B-Instruct-q4f16_1-MLC"
         : "Qwen2.5-1.5B-Instruct-q4f32_1-MLC";
 
-      setProgress(
-        hasF16
-          ? "Hardware supports f16. Initializing Llama 3.2 (q4f16)..."
-          : "Hardware lacks f16 shaders. Initializing universal Qwen 2.5 (q4f32)..."
+      workerRef.current = new Worker(
+        new URL("../workers/llm.worker.ts", import.meta.url),
+        { type: "module" }
       );
-
-      if (!workerRef.current) {
-        workerRef.current = new Worker(
-          new URL("../workers/llm.worker.ts", import.meta.url),
-          { type: "module" }
-        );
-      }
 
       const engine = await CreateWebWorkerMLCEngine(
         workerRef.current,
@@ -80,8 +83,13 @@ export function useWebLLM() {
       setProgress("");
     } catch (err: any) {
       console.error("Failed to load model:", err);
+      // Clean worker thread on failure so subsequent attempts start fresh
+      if (workerRef.current) {
+        workerRef.current.terminate();
+        workerRef.current = null;
+      }
       setStatus("error");
-      setProgress(err?.message || "Failed to initialize WebGPU engine.");
+      setProgress(err?.message || "Download interrupted. Please try again.");
     }
   }, []);
 
