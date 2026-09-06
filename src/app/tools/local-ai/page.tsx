@@ -11,6 +11,194 @@ interface ChatSession {
   updatedAt: number;
 }
 
+function InlineText({ text }: { text: string }) {
+  const parts = text.split(/(`[^`]+`|\*\*[^*]+\*\*)/g);
+  return (
+    <>
+      {parts.map((part, i) => {
+        if (part.startsWith("`") && part.endsWith("`") && part.length >= 2) {
+          return (
+            <code
+              key={i}
+              className="px-1.5 py-0.5 mx-0.5 rounded bg-[#282a2c] text-amber-300 font-mono text-[12px] border border-neutral-700/50"
+            >
+              {part.slice(1, -1)}
+            </code>
+          );
+        }
+        if (part.startsWith("**") && part.endsWith("**") && part.length >= 4) {
+          return (
+            <strong key={i} className="font-semibold text-white">
+              {part.slice(2, -2)}
+            </strong>
+          );
+        }
+        return <span key={i}>{part}</span>;
+      })}
+    </>
+  );
+}
+
+function CodeBlock({ code, lang }: { code: string; lang: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const copyCode = () => {
+    navigator.clipboard.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div className="my-3 rounded-xl overflow-hidden border border-neutral-800 bg-[#0d0d0e] font-mono text-xs shadow-lg">
+      <div className="flex items-center justify-between px-4 py-2 bg-[#1e1f20] border-b border-neutral-800 text-neutral-400">
+        <span className="text-[11px] font-medium uppercase tracking-wider text-neutral-300">
+          {lang || "code"}
+        </span>
+        <button
+          onClick={copyCode}
+          className="flex items-center gap-1.5 text-[11px] text-neutral-400 hover:text-white transition-colors"
+        >
+          {copied ? (
+            <>
+              <svg
+                className="w-3.5 h-3.5 text-emerald-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+              <span className="text-emerald-400">Copied!</span>
+            </>
+          ) : (
+            <>
+              <svg
+                className="w-3.5 h-3.5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                />
+              </svg>
+              <span>Copy code</span>
+            </>
+          )}
+        </button>
+      </div>
+      <pre className="p-4 overflow-x-auto text-neutral-200 leading-relaxed scrollbar-thin">
+        <code>{code}</code>
+      </pre>
+    </div>
+  );
+}
+
+function MarkdownRenderer({ content }: { content: string }) {
+  if (!content) return null;
+
+  // Handles both closed and active in-stream code blocks
+  const segments = content.split(/(```[\w-]*\n[\s\S]*?(?:```|$))/g);
+
+  return (
+    <div className="flex flex-col gap-2 text-sm leading-relaxed text-neutral-200">
+      {segments.map((segment, index) => {
+        if (segment.startsWith("```")) {
+          const match = segment.match(/^```(\w+)?\n([\s\S]*?)(?:```)?$/);
+          const lang = match?.[1] || "";
+          const code = (
+            match?.[2] ??
+            segment.replace(/^```\w*\n?/, "").replace(/```$/, "")
+          ).trimEnd();
+          return <CodeBlock key={index} code={code} lang={lang} />;
+        }
+
+        const lines = segment.split("\n");
+        return (
+          <div key={index} className="flex flex-col gap-1.5">
+            {lines.map((line, lineIdx) => {
+              const trimmed = line.trim();
+              if (!trimmed) return <div key={lineIdx} className="h-1" />;
+
+              if (trimmed.startsWith("### ")) {
+                return (
+                  <h4
+                    key={lineIdx}
+                    className="text-sm font-semibold text-white mt-2 mb-0.5"
+                  >
+                    <InlineText text={trimmed.slice(4)} />
+                  </h4>
+                );
+              }
+              if (trimmed.startsWith("## ")) {
+                return (
+                  <h3
+                    key={lineIdx}
+                    className="text-base font-semibold text-white mt-2.5 mb-1"
+                  >
+                    <InlineText text={trimmed.slice(3)} />
+                  </h3>
+                );
+              }
+              if (trimmed.startsWith("# ")) {
+                return (
+                  <h2
+                    key={lineIdx}
+                    className="text-lg font-bold text-white mt-3 mb-1"
+                  >
+                    <InlineText text={trimmed.slice(2)} />
+                  </h2>
+                );
+              }
+
+              if (trimmed.startsWith("- ") || trimmed.startsWith("* ")) {
+                return (
+                  <div key={lineIdx} className="flex items-start gap-2 pl-2">
+                    <span className="text-amber-400 mt-1.5 text-[8px] leading-none">
+                      •
+                    </span>
+                    <div className="flex-1">
+                      <InlineText text={trimmed.slice(2)} />
+                    </div>
+                  </div>
+                );
+              }
+
+              const numMatch = trimmed.match(/^(\d+)\.\s+(.*)/);
+              if (numMatch) {
+                return (
+                  <div key={lineIdx} className="flex items-start gap-2 pl-2">
+                    <span className="text-amber-400 font-mono text-xs shrink-0 mt-0.5">
+                      {numMatch[1]}.
+                    </span>
+                    <div className="flex-1">
+                      <InlineText text={numMatch[2]} />
+                    </div>
+                  </div>
+                );
+              }
+
+              return (
+                <p key={lineIdx} className="leading-relaxed">
+                  <InlineText text={line} />
+                </p>
+              );
+            })}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function LocalAIPage() {
   const {
     status,
@@ -33,7 +221,6 @@ export default function LocalAIPage() {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Load chat history from localStorage on initial render
   useEffect(() => {
     try {
       const saved = localStorage.getItem("quicktools_localai_sessions");
@@ -46,7 +233,6 @@ export default function LocalAIPage() {
     }
   }, []);
 
-  // Save active messages into the current session in localStorage
   useEffect(() => {
     if (messages.length === 0) return;
 
@@ -62,9 +248,7 @@ export default function LocalAIPage() {
       let updated: ChatSession[];
       if (activeSessionId) {
         updated = prevSessions.map((s) =>
-          s.id === activeSessionId
-            ? { ...s, messages, updatedAt: now }
-            : s
+          s.id === activeSessionId ? { ...s, messages, updatedAt: now } : s
         );
       } else {
         const newId = `session_${now}`;
@@ -87,7 +271,6 @@ export default function LocalAIPage() {
     });
   }, [messages, activeSessionId]);
 
-  // Keep scroll smoothly pinned to bottom of the chat without shifting the page
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop =
@@ -163,14 +346,13 @@ export default function LocalAIPage() {
 
   return (
     <div className="flex h-[calc(100dvh-57px)] w-full overflow-hidden bg-[#131314] text-neutral-100 font-sans">
-      {/* Left Sidebar (Gemini Style) */}
+      {/* Left Sidebar */}
       <aside
         className={`flex flex-col justify-between bg-[#1e1f20] border-r border-neutral-800 transition-all duration-300 z-20 ${
           sidebarOpen ? "w-64 min-w-[16rem]" : "w-0 min-w-0 -translate-x-full"
         }`}
       >
         <div className="p-3 flex flex-col gap-3 overflow-hidden">
-          {/* Top Actions */}
           <div className="flex items-center justify-between px-2 pt-1">
             <button
               onClick={handleStartNewChat}
@@ -193,7 +375,6 @@ export default function LocalAIPage() {
             </button>
           </div>
 
-          {/* Recents Section */}
           <div className="mt-4 flex flex-col flex-1 overflow-y-auto max-h-[calc(100vh-280px)]">
             <span className="text-[11px] font-semibold text-neutral-400 px-3 pb-2 uppercase tracking-wider">
               Recent
@@ -244,7 +425,6 @@ export default function LocalAIPage() {
           </div>
         </div>
 
-        {/* Sidebar Footer */}
         <div className="p-3 border-t border-neutral-800/80 flex flex-col gap-2">
           <div className="flex items-center gap-2.5 px-2 py-1.5 rounded-lg bg-neutral-900/40 border border-neutral-800">
             <span className="relative flex h-2 w-2">
@@ -267,7 +447,6 @@ export default function LocalAIPage() {
 
       {/* Main Canvas Area */}
       <div className="flex-1 flex flex-col h-full relative overflow-hidden">
-        {/* Minimalist Top Bar */}
         <header className="h-12 flex items-center justify-between px-4 border-b border-neutral-800/40 shrink-0">
           <div className="flex items-center gap-3">
             <button
@@ -290,7 +469,6 @@ export default function LocalAIPage() {
               </svg>
             </button>
             <div className="flex items-center gap-2">
-              {/* Gemini Star Sparkle */}
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
                 <path
                   d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"
@@ -330,20 +508,23 @@ export default function LocalAIPage() {
         </header>
 
         {/* Content Body */}
-        <div className="flex-1 overflow-y-auto flex flex-col justify-between" ref={chatContainerRef}>
-          {/* Unsupported WebGPU Notification */}
+        <div
+          className="flex-1 overflow-y-auto flex flex-col justify-between"
+          ref={chatContainerRef}
+        >
           {status === "unsupported" && (
             <div className="m-auto max-w-md p-6 rounded-2xl bg-[#1e1f20] border border-red-800/80 text-center">
               <h2 className="text-base font-semibold text-red-300">
                 WebGPU is Not Enabled
               </h2>
               <p className="text-xs text-neutral-400 mt-2">
-                Your browser or graphics driver currently lacks WebGPU support. Please use desktop Chrome, Edge, or Brave with graphics acceleration enabled.
+                Your browser or graphics driver currently lacks WebGPU support.
+                Please use desktop Chrome, Edge, or Brave with graphics
+                acceleration enabled.
               </p>
             </div>
           )}
 
-          {/* Initialization Gate */}
           {(status === "idle" || status === "loading" || status === "error") && (
             <div className="m-auto max-w-lg w-full p-8 flex flex-col items-center text-center">
               <svg className="w-12 h-12 mb-4" viewBox="0 0 24 24" fill="none">
@@ -370,7 +551,8 @@ export default function LocalAIPage() {
                 Private In-Browser Intelligence
               </h2>
               <p className="text-xs text-neutral-400 mt-2 max-w-sm">
-                Runs completely on your graphics card via WebGPU. Your prompts and files never leave RAM.
+                Runs completely on your graphics card via WebGPU. Your prompts and
+                files never leave RAM.
               </p>
 
               {status === "loading" ? (
@@ -405,11 +587,9 @@ export default function LocalAIPage() {
             </div>
           )}
 
-          {/* Active Chat Conversation Area */}
           {(status === "ready" || status === "generating") && (
             <div className="w-full max-w-3xl mx-auto px-4 py-6 flex flex-col gap-6">
               {messages.length === 0 ? (
-                // Gemini Blank Greeting Screen
                 <div className="my-auto py-12 flex flex-col gap-6">
                   <div>
                     <h2 className="text-4xl sm:text-5xl font-medium tracking-tight bg-gradient-to-r from-[#4b90ff] via-[#d96570] to-[#fec76f] bg-clip-text text-transparent">
@@ -420,7 +600,6 @@ export default function LocalAIPage() {
                     </h3>
                   </div>
 
-                  {/* Starter Cards */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
                     {[
                       {
@@ -464,7 +643,6 @@ export default function LocalAIPage() {
                   </div>
                 </div>
               ) : (
-                // Message List
                 messages.map((msg, index) => (
                   <div
                     key={index}
@@ -474,7 +652,11 @@ export default function LocalAIPage() {
                   >
                     {msg.role === "assistant" && (
                       <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-amber-400 flex items-center justify-center shrink-0 mt-0.5 shadow-sm">
-                        <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor">
+                        <svg
+                          className="w-4 h-4 text-white"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                        >
                           <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" />
                         </svg>
                       </div>
@@ -483,16 +665,18 @@ export default function LocalAIPage() {
                       className={`group relative max-w-[85%] ${
                         msg.role === "user"
                           ? "bg-[#282a2c] text-neutral-100 px-4 py-2.5 rounded-3xl"
-                          : "text-neutral-200 py-1"
+                          : "text-neutral-200 py-1 w-full"
                       }`}
                     >
-                      <div className="whitespace-pre-wrap font-sans text-sm">
-                        {msg.content || (
-                          <span className="animate-pulse text-neutral-500">
-                            Thinking...
-                          </span>
-                        )}
-                      </div>
+                      {msg.role === "user" ? (
+                        <p className="whitespace-pre-wrap">{msg.content}</p>
+                      ) : msg.content ? (
+                        <MarkdownRenderer content={msg.content} />
+                      ) : (
+                        <span className="animate-pulse text-neutral-500">
+                          Thinking...
+                        </span>
+                      )}
 
                       {msg.role === "assistant" && msg.content && (
                         <div className="mt-2 flex items-center gap-2">
@@ -513,7 +697,7 @@ export default function LocalAIPage() {
                                 d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
                               />
                             </svg>
-                            {copiedIndex === index ? "Copied" : "Copy"}
+                            {copiedIndex === index ? "Copied" : "Copy text"}
                           </button>
                         </div>
                       )}
