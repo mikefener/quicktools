@@ -4,7 +4,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import { CreateWebWorkerMLCEngine, MLCEngineInterface } from "@mlc-ai/web-llm";
 
 export interface Message {
-  role: "user" | "assistant";
+  role: "system" | "user" | "assistant";
   content: string;
 }
 
@@ -26,29 +26,37 @@ export interface ModelOption {
   recommendedFor: string;
 }
 
+export interface EngineSettings {
+  systemPrompt: string;
+  temperature: number;
+}
+
 export const MODEL_OPTIONS: ModelOption[] = [
   {
     tier: "0.5B",
     label: "0.5B Fast",
     sublabel: "Ultra-compact",
     size: "~350 MB",
-    recommendedFor: "Instant loading, low VRAM, basic summaries",
+    recommendedFor: "Instant loading, low VRAM, grammar, basic summaries",
   },
   {
     tier: "1.5B",
     label: "1.5B Balanced",
     sublabel: "Recommended",
     size: "~900 MB",
-    recommendedFor: "JSON audits, credential leaks, solid code reasoning",
+    recommendedFor: "JSON audits, credential leak scans, solid code reasoning",
   },
   {
     tier: "3B",
     label: "3B Deep Reasoning",
     sublabel: "High Precision",
     size: "~1.8 GB",
-    recommendedFor: "Complex multi-step refactors & deep security analysis",
+    recommendedFor: "Complex multi-step refactors and full vulnerability analysis",
   },
 ];
+
+export const DEFAULT_SYSTEM_PROMPT =
+  "You are a helpful, precise local AI copilot running completely client-side in browser RAM via WebGPU. Prioritize structured, secure, and concise answers.";
 
 export function useWebLLM() {
   const [status, setStatus] = useState<EngineStatus>("idle");
@@ -56,14 +64,34 @@ export function useWebLLM() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [selectedTier, setSelectedTier] = useState<ModelTier>("1.5B");
   const [activeTier, setActiveTier] = useState<ModelTier | null>(null);
+  const [storageUsageMB, setStorageUsageMB] = useState<number | null>(null);
+
+  const [settings, setSettings] = useState<EngineSettings>({
+    systemPrompt: DEFAULT_SYSTEM_PROMPT,
+    temperature: 0.6,
+  });
 
   const engineRef = useRef<MLCEngineInterface | null>(null);
   const workerRef = useRef<Worker | null>(null);
+
+  const updateStorageEstimate = useCallback(async () => {
+    try {
+      if (typeof navigator !== "undefined" && navigator.storage?.estimate) {
+        const estimate = await navigator.storage.estimate();
+        if (estimate.usage !== undefined) {
+          setStorageUsageMB(Math.round(estimate.usage / (1024 * 1024)));
+        }
+      }
+    } catch (e) {
+      console.error("Storage estimation error:", e);
+    }
+  }, []);
 
   useEffect(() => {
     if (typeof window !== "undefined" && !(navigator as any).gpu) {
       setStatus("unsupported");
     }
+    updateStorageEstimate();
 
     return () => {
       if (workerRef.current) {
@@ -71,7 +99,7 @@ export function useWebLLM() {
         workerRef.current = null;
       }
     };
-  }, []);
+  }, [updateStorageEstimate]);
 
   const resolveModelId = (tier: ModelTier, hasF16: boolean): string => {
     switch (tier) {
@@ -141,6 +169,7 @@ export function useWebLLM() {
         setActiveTier(targetTier);
         setStatus("ready");
         setProgress("");
+        updateStorageEstimate();
       } catch (err: any) {
         console.error("Failed to load model:", err);
         if (workerRef.current) {
@@ -151,7 +180,7 @@ export function useWebLLM() {
         setProgress(err?.message || "Engine initialization failed.");
       }
     },
-    [selectedTier]
+    [selectedTier, updateStorageEstimate]
   );
 
   const switchModel = useCallback(
@@ -163,6 +192,42 @@ export function useWebLLM() {
     },
     [status, loadModel]
   );
+
+  const purgeCache = useCallback(async () => {
+    try {
+      if (workerRef.current) {
+        workerRef.current.terminate();
+        workerRef.current = null;
+      }
+      engineRef.current = null;
+
+      if (typeof window !== "undefined" && "caches" in window) {
+        const cacheKeys = await caches.keys();
+        for (const key of cacheKeys) {
+          if (key.includes("webllm")) {
+            await caches.delete(key);
+          }
+        }
+      }
+
+      if (typeof window !== "undefined" && window.indexedDB?.databases) {
+        const dbs = await window.indexedDB.databases();
+        for (const db of dbs) {
+          if (db.name && db.name.includes("webllm")) {
+            window.indexedDB.deleteDatabase(db.name);
+          }
+        }
+      }
+
+      setStatus("idle");
+      setActiveTier(null);
+      setProgress("Local model cache purged successfully.");
+      await updateStorageEstimate();
+    } catch (err: any) {
+      console.error("Purge cache error:", err);
+      setProgress("Failed to fully clear cache: " + (err?.message || err));
+    }
+  }, [updateStorageEstimate]);
 
   const sendMessage = useCallback(
     async (userInput: string) => {
@@ -178,11 +243,20 @@ export function useWebLLM() {
       setStatus("generating");
 
       try {
+        const payloadMessages: Message[] = [];
+        if (settings.systemPrompt.trim()) {
+          payloadMessages.push({
+            role: "system",
+            content: settings.systemPrompt.trim(),
+          });
+        }
+        for (const m of updatedMessages.slice(0, -1)) {
+          payloadMessages.push({ role: m.role, content: m.content });
+        }
+
         const stream = await engineRef.current.chat.completions.create({
-          messages: updatedMessages.slice(0, -1).map((m) => ({
-            role: m.role,
-            content: m.content,
-          })),
+          messages: payloadMessages,
+          temperature: settings.temperature,
           stream: true,
         });
 
@@ -214,7 +288,7 @@ export function useWebLLM() {
         setStatus("ready");
       }
     },
-    [messages]
+    [messages, settings]
   );
 
   const clearChat = useCallback(() => {
@@ -230,11 +304,16 @@ export function useWebLLM() {
     messages,
     selectedTier,
     activeTier,
+    settings,
+    storageUsageMB,
     setMessages,
     setSelectedTier,
+    setSettings,
     switchModel,
     loadModel,
     sendMessage,
     clearChat,
+    purgeCache,
+    updateStorageEstimate,
   };
 }

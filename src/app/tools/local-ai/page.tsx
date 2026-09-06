@@ -7,6 +7,7 @@ import {
   Message,
   ModelTier,
   MODEL_OPTIONS,
+  DEFAULT_SYSTEM_PROMPT,
 } from "@/hooks/useWebLLM";
 
 interface ChatSession {
@@ -210,12 +211,16 @@ export default function LocalAIPage() {
     messages,
     selectedTier,
     activeTier,
+    settings,
+    storageUsageMB,
     setMessages,
     setSelectedTier,
+    setSettings,
     switchModel,
     loadModel,
     sendMessage,
     clearChat,
+    purgeCache,
   } = useWebLLM();
 
   const [input, setInput] = useState("");
@@ -226,6 +231,8 @@ export default function LocalAIPage() {
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [exportOpen, setExportOpen] = useState(false);
 
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -367,11 +374,167 @@ export default function LocalAIPage() {
     setTimeout(() => setCopiedIndex(null), 2000);
   };
 
+  const exportCurrentChat = (format: "md" | "txt") => {
+    if (messages.length === 0) return;
+
+    let exportContent = "";
+    if (format === "md") {
+      exportContent = `# QuickTools Local AI Audit Report\n\nGenerated: ${new Date().toISOString()}\nModel: ${
+        activeTier || selectedTier
+      }\n\n---\n\n`;
+      for (const m of messages) {
+        exportContent += `### ${m.role === "user" ? "You" : "Local AI Copilot"}\n\n${m.content}\n\n---\n\n`;
+      }
+    } else {
+      exportContent = `QUICKTOOLS LOCAL AI SESSION EXPORT\nDate: ${new Date().toLocaleString()}\nModel: ${
+        activeTier || selectedTier
+      }\n\n========================================\n\n`;
+      for (const m of messages) {
+        exportContent += `[${m.role.toUpperCase()}]:\n${m.content}\n\n----------------------------------------\n\n`;
+      }
+    }
+
+    const blob = new Blob([exportContent], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `local-ai-report-${Date.now()}.${format}`;
+    a.click();
+    URL.revokeObjectURL(url);
+    setExportOpen(false);
+  };
+
   const activeOption =
     MODEL_OPTIONS.find((m) => m.tier === selectedTier) ?? MODEL_OPTIONS[1];
 
   return (
     <div className="flex h-[calc(100dvh-57px)] w-full overflow-hidden bg-[#131314] text-neutral-100 font-sans">
+      {/* Settings Modal Drawer */}
+      {settingsOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="w-full max-w-lg bg-[#1e1f20] border border-neutral-800 rounded-3xl p-6 shadow-2xl flex flex-col gap-5">
+            <div className="flex items-center justify-between border-b border-neutral-800 pb-3">
+              <h3 className="text-base font-semibold text-white flex items-center gap-2">
+                <span>⚙️ Engine Settings & Storage</span>
+              </h3>
+              <button
+                onClick={() => setSettingsOpen(false)}
+                className="text-neutral-400 hover:text-white text-lg p-1"
+              >
+                &times;
+              </button>
+            </div>
+
+            {/* System Prompt */}
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-medium text-neutral-300">
+                  System Persona Prompt
+                </label>
+                <button
+                  onClick={() =>
+                    setSettings((s) => ({
+                      ...s,
+                      systemPrompt:
+                        "You are an expert offensive security auditor and code reviewer. Inspect all inputs strictly for credential leaks, logic defects, vulnerabilities, and misconfigurations. Provide remediation commands.",
+                    }))
+                  }
+                  className="text-[10px] text-amber-400 hover:underline"
+                >
+                  Load Security Auditor Preset
+                </button>
+              </div>
+              <textarea
+                value={settings.systemPrompt}
+                onChange={(e) =>
+                  setSettings((s) => ({ ...s, systemPrompt: e.target.value }))
+                }
+                rows={3}
+                className="w-full bg-[#131314] border border-neutral-700/80 rounded-xl p-3 text-xs text-neutral-200 focus:outline-none focus:border-neutral-500"
+              />
+            </div>
+
+            {/* Temperature Slider */}
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-medium text-neutral-300">
+                  Temperature (Creativity)
+                </span>
+                <span className="font-mono text-amber-400">
+                  {settings.temperature}
+                </span>
+              </div>
+              <input
+                type="range"
+                min="0.0"
+                max="1.0"
+                step="0.05"
+                value={settings.temperature}
+                onChange={(e) =>
+                  setSettings((s) => ({
+                    ...s,
+                    temperature: parseFloat(e.target.value),
+                  }))
+                }
+                className="w-full accent-amber-400 cursor-pointer"
+              />
+              <div className="flex justify-between text-[10px] text-neutral-500">
+                <span>0.0 (Deterministic / Audit)</span>
+                <span>1.0 (Creative)</span>
+              </div>
+            </div>
+
+            {/* Local Footprint & Cache Purge */}
+            <div className="p-4 rounded-2xl bg-neutral-900/80 border border-neutral-800 flex flex-col gap-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-semibold text-white">
+                    Cached GPU Weights
+                  </p>
+                  <p className="text-[11px] text-neutral-400 mt-0.5">
+                    Storage currently used on your device:{" "}
+                    <span className="font-mono text-amber-300 font-medium">
+                      {storageUsageMB !== null ? `${storageUsageMB} MB` : "Checking..."}
+                    </span>
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    if (confirm("Purge all cached models from browser storage?")) {
+                      purgeCache();
+                      setSettingsOpen(false);
+                    }
+                  }}
+                  className="px-3 py-1.5 rounded-lg bg-red-950/60 hover:bg-red-900/80 border border-red-800/80 text-red-300 text-xs transition-colors"
+                >
+                  Purge Model Cache
+                </button>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2 pt-2">
+              <button
+                onClick={() => {
+                  setSettings({
+                    systemPrompt: DEFAULT_SYSTEM_PROMPT,
+                    temperature: 0.6,
+                  });
+                }}
+                className="px-4 py-2 rounded-full bg-neutral-800 hover:bg-neutral-700 text-xs text-neutral-300 transition-colors"
+              >
+                Reset Defaults
+              </button>
+              <button
+                onClick={() => setSettingsOpen(false)}
+                className="px-5 py-2 rounded-full bg-white hover:bg-neutral-200 text-xs font-semibold text-black transition-colors"
+              >
+                Save & Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Left Sidebar */}
       <aside
         className={`flex flex-col justify-between bg-[#1e1f20] border-r border-neutral-800 transition-all duration-300 z-20 ${
@@ -475,7 +638,7 @@ export default function LocalAIPage() {
 
       {/* Main Canvas Area */}
       <div className="flex-1 flex flex-col h-full relative overflow-hidden">
-        {/* Header with Model Selector */}
+        {/* Header Bar */}
         <header className="h-12 flex items-center justify-between px-4 border-b border-neutral-800/40 shrink-0">
           <div className="flex items-center gap-3">
             <button
@@ -520,7 +683,7 @@ export default function LocalAIPage() {
                 </defs>
               </svg>
 
-              {/* Model Tier Selector Dropdown */}
+              {/* Model Dropdown */}
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -587,14 +750,87 @@ export default function LocalAIPage() {
             </div>
           </div>
 
-          {status === "ready" && (
+          {/* Action Tools (Settings, Export, Reset) */}
+          <div className="flex items-center gap-2">
+            {/* Export Dropdown */}
+            {messages.length > 0 && (
+              <div className="relative">
+                <button
+                  onClick={() => setExportOpen(!exportOpen)}
+                  className="flex items-center gap-1.5 text-xs text-neutral-300 hover:text-white px-2.5 py-1 rounded-lg bg-[#1e1f20] hover:bg-[#282a2c] border border-neutral-700/60 transition-colors"
+                  title="Export audit report"
+                >
+                  <svg
+                    className="w-3.5 h-3.5 text-neutral-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                    />
+                  </svg>
+                  <span>Export</span>
+                </button>
+
+                {exportOpen && (
+                  <div className="absolute right-0 mt-2 w-40 p-1 rounded-xl bg-[#1e1f20] border border-neutral-700 shadow-xl z-50 flex flex-col gap-0.5">
+                    <button
+                      onClick={() => exportCurrentChat("md")}
+                      className="w-full text-left px-3 py-2 rounded-lg text-xs text-neutral-200 hover:bg-[#282a2c] transition-colors"
+                    >
+                      Export Markdown (.md)
+                    </button>
+                    <button
+                      onClick={() => exportCurrentChat("txt")}
+                      className="w-full text-left px-3 py-2 rounded-lg text-xs text-neutral-200 hover:bg-[#282a2c] transition-colors"
+                    >
+                      Export Plain Text (.txt)
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Settings Trigger */}
             <button
-              onClick={handleStartNewChat}
-              className="text-xs text-neutral-400 hover:text-neutral-200 px-2 py-1"
+              onClick={() => setSettingsOpen(true)}
+              className="p-1.5 text-neutral-400 hover:text-white rounded-lg hover:bg-neutral-800 transition-colors"
+              title="Engine settings & storage"
             >
-              Reset Session
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+              </svg>
             </button>
-          )}
+
+            {status === "ready" && (
+              <button
+                onClick={handleStartNewChat}
+                className="text-xs text-neutral-400 hover:text-neutral-200 px-2 py-1"
+              >
+                Reset Session
+              </button>
+            )}
+          </div>
         </header>
 
         {/* Content Body */}
