@@ -57,6 +57,8 @@ export function useWebLLM() {
         throw new Error("No compatible GPU adapter found.");
       }
 
+      // Detect f16 hardware extension support.
+      // If unsupported (e.g. Linux Mesa/Vulkan), fallback to lightweight 0.5B f32 (~350MB) to prevent CDN cache drops.
       const hasF16 = adapter.features?.has?.("shader-f16") ?? false;
       const selectedModel = hasF16
         ? "Llama-3.2-1B-Instruct-q4f16_1-MLC"
@@ -65,7 +67,7 @@ export function useWebLLM() {
       setProgress(
         hasF16
           ? "Hardware supports f16. Initializing Llama 3.2 (q4f16)..."
-          : "Hardware lacks f16 shaders. Initializing universal Qwen 2.5 (q4f32)..."
+          : "Hardware lacks f16 shaders. Initializing universal Qwen 2.5 0.5B (q4f32)..."
       );
 
       workerRef.current = new Worker(
