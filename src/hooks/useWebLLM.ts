@@ -24,14 +24,15 @@ export function useWebLLM() {
   const workerRef = useRef<Worker | null>(null);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && !navigator.gpu) {
+    if (typeof window !== "undefined" && !(navigator as any).gpu) {
       setStatus("unsupported");
     }
   }, []);
 
   const loadModel = useCallback(async () => {
     try {
-      if (!navigator.gpu) {
+      const nav = typeof window !== "undefined" ? (navigator as any) : null;
+      if (!nav?.gpu) {
         setStatus("unsupported");
         return;
       }
@@ -39,22 +40,22 @@ export function useWebLLM() {
       setStatus("loading");
       setProgress("Detecting GPU adapter capabilities...");
 
-      const adapter = await navigator.gpu.requestAdapter();
+      const adapter = await nav.gpu.requestAdapter();
       if (!adapter) {
         throw new Error("No compatible GPU adapter found.");
       }
 
       // Check whether this GPU supports 16-bit float shaders.
-      // If not, automatically fallback to universal 32-bit float (f32) quantization.
-      const hasF16 = adapter.features.has("shader-f16");
+      // If unsupported (common on Linux/Mesa drivers), fall back to universal 32-bit (f32) quantization.
+      const hasF16 = adapter.features?.has?.("shader-f16") ?? false;
       const selectedModel = hasF16
         ? "Llama-3.2-1B-Instruct-q4f16_1-MLC"
-        : "Llama-3.2-1B-Instruct-q4f32_1-MLC";
+        : "Qwen2.5-1.5B-Instruct-q4f32_1-MLC";
 
       setProgress(
         hasF16
           ? "Hardware supports f16. Initializing Llama 3.2 (q4f16)..."
-          : "Hardware lacks f16 shaders. Initializing universal Llama 3.2 (q4f32)..."
+          : "Hardware lacks f16 shaders. Initializing universal Qwen 2.5 (q4f32)..."
       );
 
       if (!workerRef.current) {
