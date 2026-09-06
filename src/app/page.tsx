@@ -6,7 +6,7 @@ const tools = [
     description: 'Format, validate, repair, and minify JSON data with instant syntax error callouts.',
     href: '/tools/json-formatter',
     tag: 'Dev',
-    badge: 'New',
+    badge: 'Popular',
     icon: (
       <svg className="w-5 h-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
@@ -18,7 +18,7 @@ const tools = [
     description: 'Visual 24-hour overlap planner to coordinate remote team meetings across global time zones.',
     href: '/tools/timezone-planner',
     tag: 'Remote',
-    badge: 'Popular',
+    badge: 'Planner',
     icon: (
       <svg className="w-5 h-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -115,7 +115,7 @@ export default function Home() {
   return (
     <main className="min-h-[calc(100vh-3.5rem)] bg-zinc-950 text-white flex flex-col justify-between">
       {/* Hero Section */}
-      <section className="max-w-5xl mx-auto px-6 pt-10 pb-8 w-full text-center sm:text-left">
+      <section className="max-w-5xl mx-auto px-6 pt-10 pb-6 w-full text-center sm:text-left">
         <div className="inline-block text-[11px] font-mono font-medium text-yellow-400/90 bg-yellow-400/10 border border-yellow-400/20 px-2.5 py-0.5 rounded-full mb-3">
           100% Client-Side Processing
         </div>
@@ -124,8 +124,39 @@ export default function Home() {
           <span className="text-yellow-400">Files Never Leave Your Device.</span>
         </h1>
         <p className="text-zinc-400 mt-3 max-w-xl text-sm leading-relaxed">
-          High-performance JSON validation, media conversion, timezone planning, print calculators, and PDF tools running entirely on your local hardware. Instant execution with no file size limits or server queues.
+          High-performance JSON validation, local WebGPU AI, media conversion, timezone planning, print calculators, and PDF tools running entirely on your local hardware. Instant execution with no file size limits or server queues.
         </p>
+      </section>
+
+      {/* Flagship Featured Hero Tool */}
+      <section className="max-w-5xl mx-auto px-6 pb-6 w-full">
+        <Link
+          href="/tools/local-ai"
+          className="group relative overflow-hidden rounded-2xl border border-yellow-400/30 bg-gradient-to-r from-yellow-950/20 via-zinc-900 to-zinc-900 p-6 transition-all hover:border-yellow-400/60 hover:shadow-lg hover:shadow-yellow-400/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6"
+        >
+          <div className="space-y-2 max-w-2xl">
+            <div className="flex items-center gap-2">
+              <span className="inline-flex items-center gap-1 rounded bg-yellow-400/20 px-2 py-0.5 text-[10px] font-mono font-bold tracking-wider text-yellow-300 border border-yellow-400/30 uppercase">
+                ⚡ Flagship Workspace
+              </span>
+              <span className="text-[11px] text-zinc-400 font-mono">
+                WebGPU • Llama 3.2
+              </span>
+            </div>
+            <h2 className="text-xl sm:text-2xl font-bold text-white group-hover:text-yellow-400 transition-colors">
+              Zero-Cloud Local AI Copilot
+            </h2>
+            <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+              Analyze private codebases, audit text for secrets, and summarize confidential documents. Runs 100% in your browser RAM with zero server communication.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
+            <span className="rounded-lg bg-yellow-400 px-4 py-2.5 text-xs font-bold text-zinc-950 group-hover:bg-yellow-300 transition-colors">
+              Launch Copilot &rarr;
+            </span>
+          </div>
+        </Link>
       </section>
 
       {/* Balanced 3x3 Tools Grid */}
