@@ -2,7 +2,12 @@
 
 import { useState, useRef, useEffect, ChangeEvent } from "react";
 import Link from "next/link";
-import { useWebLLM, Message } from "@/hooks/useWebLLM";
+import {
+  useWebLLM,
+  Message,
+  ModelTier,
+  MODEL_OPTIONS,
+} from "@/hooks/useWebLLM";
 
 interface ChatSession {
   id: string;
@@ -105,7 +110,6 @@ function CodeBlock({ code, lang }: { code: string; lang: string }) {
 function MarkdownRenderer({ content }: { content: string }) {
   if (!content) return null;
 
-  // Handles both closed and active in-stream code blocks
   const segments = content.split(/(```[\w-]*\n[\s\S]*?(?:```|$))/g);
 
   return (
@@ -204,7 +208,11 @@ export default function LocalAIPage() {
     status,
     progress,
     messages,
+    selectedTier,
+    activeTier,
     setMessages,
+    setSelectedTier,
+    switchModel,
     loadModel,
     sendMessage,
     clearChat,
@@ -217,9 +225,11 @@ export default function LocalAIPage() {
   const [sessions, setSessions] = useState<ChatSession[]>([]);
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     try {
@@ -231,6 +241,19 @@ export default function LocalAIPage() {
     } catch (e) {
       console.error("Could not load chat sessions:", e);
     }
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   useEffect(() => {
@@ -344,6 +367,9 @@ export default function LocalAIPage() {
     setTimeout(() => setCopiedIndex(null), 2000);
   };
 
+  const activeOption =
+    MODEL_OPTIONS.find((m) => m.tier === selectedTier) ?? MODEL_OPTIONS[1];
+
   return (
     <div className="flex h-[calc(100dvh-57px)] w-full overflow-hidden bg-[#131314] text-neutral-100 font-sans">
       {/* Left Sidebar */}
@@ -433,7 +459,9 @@ export default function LocalAIPage() {
             </span>
             <div className="flex flex-col text-[11px] leading-tight">
               <span className="text-neutral-300 font-medium">Hardware Isolated</span>
-              <span className="text-neutral-500">0% Cloud Bandwidth</span>
+              <span className="text-neutral-500">
+                {activeTier ? `${activeTier} in VRAM` : "0% Cloud Bandwidth"}
+              </span>
             </div>
           </div>
           <Link
@@ -447,6 +475,7 @@ export default function LocalAIPage() {
 
       {/* Main Canvas Area */}
       <div className="flex-1 flex flex-col h-full relative overflow-hidden">
+        {/* Header with Model Selector */}
         <header className="h-12 flex items-center justify-between px-4 border-b border-neutral-800/40 shrink-0">
           <div className="flex items-center gap-3">
             <button
@@ -468,6 +497,7 @@ export default function LocalAIPage() {
                 />
               </svg>
             </button>
+
             <div className="flex items-center gap-2">
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
                 <path
@@ -489,14 +519,74 @@ export default function LocalAIPage() {
                   </linearGradient>
                 </defs>
               </svg>
-              <span className="text-sm font-medium text-neutral-200">
-                Copilot Local
-              </span>
-              <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-400/10 text-amber-300 border border-amber-400/20 font-mono">
-                WebGPU
-              </span>
+
+              {/* Model Tier Selector Dropdown */}
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className="flex items-center gap-2 px-2.5 py-1 rounded-lg bg-[#1e1f20] hover:bg-[#282a2c] border border-neutral-700/60 text-xs text-neutral-200 transition-colors"
+                >
+                  <span className="font-semibold text-white">
+                    {activeOption.label}
+                  </span>
+                  <span className="text-[10px] text-neutral-400 font-mono">
+                    {activeOption.size}
+                  </span>
+                  <svg
+                    className={`w-3.5 h-3.5 text-neutral-400 transition-transform ${
+                      dropdownOpen ? "rotate-180" : ""
+                    }`}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
+
+                {dropdownOpen && (
+                  <div className="absolute left-0 mt-2 w-72 p-1.5 rounded-2xl bg-[#1e1f20] border border-neutral-700/80 shadow-2xl z-50 flex flex-col gap-1">
+                    {MODEL_OPTIONS.map((opt) => (
+                      <button
+                        key={opt.tier}
+                        onClick={() => {
+                          setDropdownOpen(false);
+                          if (status === "ready") {
+                            switchModel(opt.tier);
+                          } else {
+                            setSelectedTier(opt.tier);
+                          }
+                        }}
+                        className={`w-full text-left p-2.5 rounded-xl transition-colors flex flex-col gap-0.5 ${
+                          selectedTier === opt.tier
+                            ? "bg-[#282a2c] border border-neutral-700"
+                            : "hover:bg-[#282a2c]/60"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-semibold text-white">
+                            {opt.label}
+                          </span>
+                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-400/10 text-amber-300 font-mono border border-amber-400/20">
+                            {opt.size}
+                          </span>
+                        </div>
+                        <span className="text-[11px] text-neutral-400">
+                          {opt.recommendedFor}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
+
           {status === "ready" && (
             <button
               onClick={handleStartNewChat}
@@ -551,8 +641,11 @@ export default function LocalAIPage() {
                 Private In-Browser Intelligence
               </h2>
               <p className="text-xs text-neutral-400 mt-2 max-w-sm">
-                Runs completely on your graphics card via WebGPU. Your prompts and
-                files never leave RAM.
+                Runs completely on your graphics card via WebGPU. Ready to load{" "}
+                <span className="text-amber-300 font-semibold">
+                  {activeOption.label} ({activeOption.size})
+                </span>
+                .
               </p>
 
               {status === "loading" ? (
@@ -581,7 +674,7 @@ export default function LocalAIPage() {
                   onClick={() => loadModel()}
                   className="mt-6 px-7 py-3 rounded-full bg-white text-black font-semibold text-sm hover:bg-neutral-200 transition-all shadow-xl hover:scale-105 duration-200"
                 >
-                  Start Local Engine
+                  Load {activeOption.label} to GPU
                 </button>
               )}
             </div>
@@ -596,7 +689,7 @@ export default function LocalAIPage() {
                       Hello, Builder
                     </h2>
                     <h3 className="text-3xl sm:text-4xl font-medium text-neutral-500 mt-1">
-                      How can I help you privately today?
+                      {activeTier} model loaded. How can I assist?
                     </h3>
                   </div>
 
