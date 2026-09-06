@@ -1,130 +1,147 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
-import {
-  CreateWebWorkerMLCEngine,
-  type MLCEngineInterface,
-  type InitProgressReport,
-} from "@mlc-ai/web-llm";
+import { useState, useRef, useCallback, useEffect } from "react";
+import { CreateWebWorkerMLCEngine, MLCEngineInterface } from "@mlc-ai/web-llm";
 
-export interface ChatMessage {
-  role: "system" | "user" | "assistant";
+export interface Message {
+  role: "user" | "assistant";
   content: string;
 }
 
-export type LLMStatus =
-  | "checking"
-  | "unsupported"
+export type EngineStatus =
   | "idle"
   | "loading"
   | "ready"
   | "generating"
+  | "unsupported"
   | "error";
 
 export function useWebLLM() {
-  const [status, setStatus] = useState<LLMStatus>("checking");
-  const [progress, setProgress] = useState<string>("");
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-
+  const [status, setStatus] = useState<EngineStatus>("idle");
+  const [progress, setProgress] = useState("");
+  const [messages, setMessages] = useState<Message[]>([]);
   const engineRef = useRef<MLCEngineInterface | null>(null);
   const workerRef = useRef<Worker | null>(null);
 
   useEffect(() => {
-    // Check WebGPU availability in the browser
-    if (typeof window !== "undefined") {
-      if (!("gpu" in navigator)) {
+    if (typeof window !== "undefined" && !navigator.gpu) {
+      setStatus("unsupported");
+    }
+  }, []);
+
+  const loadModel = useCallback(async () => {
+    try {
+      if (!navigator.gpu) {
         setStatus("unsupported");
         return;
       }
-      setStatus("idle");
-    }
 
-    return () => {
-      if (workerRef.current) {
-        workerRef.current.terminate();
+      setStatus("loading");
+      setProgress("Detecting GPU adapter capabilities...");
+
+      const adapter = await navigator.gpu.requestAdapter();
+      if (!adapter) {
+        throw new Error("No compatible GPU adapter found.");
       }
-    };
-  }, []);
 
-  const loadModel = useCallback(
-    async (modelName: string = "Llama-3.2-1B-Instruct-q4f16_1-MLC") => {
-      try {
-        setStatus("loading");
-        setProgress("Initializing Web Worker...");
+      // Check whether this GPU supports 16-bit float shaders.
+      // If not, automatically fallback to universal 32-bit float (f32) quantization.
+      const hasF16 = adapter.features.has("shader-f16");
+      const selectedModel = hasF16
+        ? "Llama-3.2-1B-Instruct-q4f16_1-MLC"
+        : "Llama-3.2-1B-Instruct-q4f32_1-MLC";
 
-        const worker = new Worker(
+      setProgress(
+        hasF16
+          ? "Hardware supports f16. Initializing Llama 3.2 (q4f16)..."
+          : "Hardware lacks f16 shaders. Initializing universal Llama 3.2 (q4f32)..."
+      );
+
+      if (!workerRef.current) {
+        workerRef.current = new Worker(
           new URL("../workers/llm.worker.ts", import.meta.url),
           { type: "module" }
         );
-        workerRef.current = worker;
+      }
 
-        const engine = await CreateWebWorkerMLCEngine(worker, modelName, {
-          initProgressCallback: (report: InitProgressReport) => {
+      const engine = await CreateWebWorkerMLCEngine(
+        workerRef.current,
+        selectedModel,
+        {
+          initProgressCallback: (report) => {
             setProgress(report.text);
           },
-        });
+        }
+      );
 
-        engineRef.current = engine;
-        setStatus("ready");
-        setProgress("");
-      } catch (err: any) {
-        console.error("Failed to load model:", err);
-        setStatus("error");
-        setProgress(err?.message || "Failed to initialize WebGPU engine.");
-      }
-    },
-    []
-  );
+      engineRef.current = engine;
+      setStatus("ready");
+      setProgress("");
+    } catch (err: any) {
+      console.error("Failed to load model:", err);
+      setStatus("error");
+      setProgress(err?.message || "Failed to initialize WebGPU engine.");
+    }
+  }, []);
 
   const sendMessage = useCallback(
-    async (content: string) => {
-      if (!engineRef.current || status !== "ready" || !content.trim()) return;
+    async (userInput: string) => {
+      if (!engineRef.current || !userInput.trim()) return;
 
-      const userMessage: ChatMessage = { role: "user", content };
-      const nextMessages = [...messages, userMessage];
+      const updatedMessages: Message[] = [
+        ...messages,
+        { role: "user", content: userInput },
+        { role: "assistant", content: "" },
+      ];
 
-      setMessages(nextMessages);
+      setMessages(updatedMessages);
       setStatus("generating");
 
       try {
-        // Initialize an empty assistant response in the list
-        setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
-
-        const chunks = await engineRef.current.chat.completions.create({
-          messages: nextMessages,
+        const stream = await engineRef.current.chat.completions.create({
+          messages: updatedMessages.slice(0, -1).map((m) => ({
+            role: m.role,
+            content: m.content,
+          })),
           stream: true,
         });
 
-        let fullAssistantReply = "";
-        for await (const chunk of chunks) {
+        let fullReply = "";
+        for await (const chunk of stream) {
           const delta = chunk.choices[0]?.delta?.content || "";
-          fullAssistantReply += delta;
-
+          fullReply += delta;
           setMessages((prev) => {
-            const updated = [...prev];
-            const lastIndex = updated.length - 1;
-            if (lastIndex >= 0 && updated[lastIndex].role === "assistant") {
-              updated[lastIndex] = {
-                role: "assistant",
-                content: fullAssistantReply,
-              };
-            }
-            return updated;
+            const next = [...prev];
+            next[next.length - 1] = {
+              role: "assistant",
+              content: fullReply,
+            };
+            return next;
           });
         }
 
         setStatus("ready");
       } catch (err: any) {
-        console.error("Inference failed:", err);
-        setStatus("error");
-        setProgress("Error during text generation.");
+        console.error("Inference error:", err);
+        setMessages((prev) => {
+          const next = [...prev];
+          next[next.length - 1] = {
+            role: "assistant",
+            content: `Error generating response: ${err?.message || err}`,
+          };
+          return next;
+        });
+        setStatus("ready");
       }
     },
-    [messages, status]
+    [messages]
   );
 
   const clearChat = useCallback(() => {
     setMessages([]);
+    if (engineRef.current) {
+      engineRef.current.resetChat();
+    }
   }, []);
 
   return {
